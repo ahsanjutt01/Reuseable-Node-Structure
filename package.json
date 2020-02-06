@@ -1,0 +1,36 @@
+{
+  "name": "little_wins",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "install": "^0.13.0",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.1.0",
+    "node-localstorage": "^2.1.5",
+    "nodemon": "^2.0.2",
+    "npm": "^6.13.6",
+    "passport-jwt": "^4.0.0",
+    "passport": "^0.4.1",
+    "sequelize": "^5.21.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahsanjutt01/Little_Wins.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahsanjutt01/Little_Wins/issues"
+  },
+  "homepage": "https://github.com/ahsanjutt01/Little_Wins#readme"
+}
