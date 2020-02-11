@@ -11,7 +11,7 @@ router.post('/updateUser', passport.authenticate('jwt', {session: false}), admin
 
 router.post('/signup', passport.authenticate('jwt', {session: false}), adminController.postSignup);
 
-router.post('/resetPassword', passport.authenticate('jwt', {session: false}), authController.postResetPassword);
+router.post('/resetPassword', passport.authenticate('jwt', {session: false}), adminController.postResetPassword);
 
 module.exports = router;
 
