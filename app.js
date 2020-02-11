@@ -103,7 +103,7 @@ sequelize
 .sync()
 .then( result => {
     // console.log(result);
-    console.log('Connection has been established successfully port 3500.');
-    app.listen(3500);
+    console.log('Connection has been established successfully port 3200.');
+    app.listen(3200);
 })
 .catch( err => console.log(err));
