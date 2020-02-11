@@ -11,6 +11,11 @@ const authData = require('./routes/auth/auth');
 const User = require('./models/user');
 const Role = require('./models/role');
 const UserRole = require('./models/user-role');
+const UserType = require('./models/userType');
+
+const adminRoutes = require('./routes/auth/admin');
+
+
 
 const app = express();
 
@@ -31,9 +36,9 @@ var cookieExtractor = function(req) {
   }
   return token;
 };
-jwtOptions.jwtFromRequest = cookieExtractor;
+// jwtOptions.jwtFromRequest = cookieExtractor;
 
-// jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 jwtOptions.secretOrKey = 'wowwow';
 // lets create our strategy for web token
 let strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
@@ -75,13 +80,13 @@ app.use((req, res, next) => {
 });
 
 
-// Auth Rooutes
+//  Routes
 app.use(authData);
-
+app.use('/admin', adminRoutes);
 
 //If Page not found
 app.use((req, res, next) => {
-    res.status(404).render('404');
+    res.status(404).json('404 not found');
 });
 
 
@@ -95,6 +100,8 @@ User.belongsToMany(Role, { through: UserRole });
 Role.belongsToMany(User, { through: UserRole });
 // Role.belongsTo(User);
 // User.hasMany(Role);
+UserType.hasMany(User);
+User.belongsTo(UserType);
 
 
 

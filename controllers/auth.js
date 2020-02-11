@@ -4,90 +4,66 @@ const becrypt = require('bcryptjs');
 const User = require('../models/user');
 const Role = require('../models/role');
 const UserRole = require('../models/user-role');
+const UserType = require('../models/userType');
 
 "use strict"
 
 
-//Get Index Page
-
-exports.getIndex = (req, res, next) => {
-    return res.render('Index');
-}
-exports.getLogout = (req, res, next)  => {
-    res.clearCookie('jwt');
-    return res.redirect('/login');
-}
-// Get Login Page
-exports.getLogin = (req, res, next) => {
-    return res.render('login/login');
-}
 //Post Login
 exports.postLogin = (req, res, next) => {
 
     const { email, password } = req.body;
-    console.log(email + ' ' + password);
+    // console.log(email + ' ' + password);
     if (email && password) {
         let loadedUser;
-        getUser({Email: email})
+        getUser({email: email})
         .then(user => {
             if(!user) {
-                return res.redirect('/login');
-                // return res.status(401).json({msg: 'Please signup first then login'});
-                // return res.status(200).render('signup/signup.ejs', {
-                //     login: 'Login Page'
-                // });
+                return res.status(401).json({msg: 'Please signup first then login'});
             }
             loadedUser = user;
-            return becrypt.compare(password, user.Password);
+            return becrypt.compare(password, user.password);
         }).then(isEqual => {
             if (isEqual) {
-                let payload = { id: loadedUser.Id };
+                let payload = { id: loadedUser.id };
                 let token = jwt.sign(payload, req.jwtOptions.secretOrKey);
 
-                res.cookie('jwt', token);
-                return res.redirect('/Index');
+                // res.cookie('jwt', token);
+                return res.status(200).json({msg: 'Successfull login', jwt: token});
             }
             else {
-                return res.redirect('/login');
-                // return res.status(401).json({msg: 'Email or password is invalid'});
-                // return res.render('signup/signup', {
-                //     title: 'Signup'
-                // });
+                return res.status(401).json({msg: 'Email or password is invalid'});
             }
         }).catch(err => console.log(err));
     } else {
         console.log('else runn');
-        return res.redirect('/login');
+        return res.status(401).json({msg: 'Email or password is invalid'});
     }
-    // res.status(200).render('login/login.ejs', {
-    //     login: 'Login Page'
-    // });
-}
-
-exports.getSignup = (req, res, next) => {
-    return res.render('signup/signup');
 }
 
 // Post Signup
 exports.postSignup = (req, res, next) => {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, isAgreeTerms} = req.body;
     // console.log(firstName + ' ' + lastName + ' ' + email + ' ' + password);
-    getUser({Email: email}).then(user => {
+    getUser({email: email}).then(user => {
         if(!user) {
             becrypt.hash(password, 12)
         .then( hashedPassword => {
-            console.log(hashedPassword);
-            const userObj = new User({
-                FirstName: firstName,
-                LastName: lastName,
-                Email: email,
-                Password: hashedPassword
+            let userTypeId;
+            return findClientUserType().then(type => {
+                userTypeId = type.id;
+                const userObj = new User({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: hashedPassword,
+                    isAgreeTerms: isAgreeTerms,
+                    userTypeId: userTypeId
+                });
+                return userObj.save();
             });
-            return userObj.save();
-            // return createUser({firstName, lastName, email, hashedPassword});
         }).then(result => {
-            // res.status(201).send(result);
-            return res.redirect('/login');
+            return res.status(201).json({msg: 'successfulll login.', result: result});
         })
         } else {
             res.status(500).send('Email already exists... ' + email);
@@ -104,7 +80,7 @@ exports.getPageUserRoles =(req, res, next) => {
     .then( users => {
         return Role.findAll()
         .then(roles => {
-            return res.render('userRole/saveUserRole', {
+            return res.status(200).json({
                 users: users,
                 roles: roles
             });
@@ -127,14 +103,14 @@ exports.addUserRoles = (req, res, next) => {
     UserRole.findOne( {where: { userId: userId}})
     .then(user => {
         if(user) {
-            return res.redirect('addUserRole');
+            return res.status(200).json(user);
         }
         UserRole.create({
             roleId: selectedRole,
             userId: userId
          })
         .then(result => {
-            return res.redirect('addUserRole');
+            return res.status(200).json(result);
         })
         .catch(err => console.log(err));
         })
@@ -149,22 +125,41 @@ exports.getUsers = (req, res, next) => {
     });
 };
 
+//Reset Password
+exports.postResetPassword = (req, res, next) => {
+    const { password, newPassword } = req.body;
 
-// Helper functions
+    const user = req.jwtOptions.user;
+    becrypt.compare(password, user.password).then(isEqual => {
+        if(isEqual) {
+            return becrypt.hash(newPassword, 12).then(hashedPassword => {
+                user.password = hashedPassword;
+                return user.save();
+            }).then(result => {
+                res.status(200).json({msg: 'password updated successfully'});
+            });
+        } else {
+            return  res.status(401).json({msg: 'Please enter the correct password to update the new one'});
+        }
+    });
+
+}
+// ========================= Helper functions ===================================
+
 
 // Create User
 const createUser = async ({ firstName, lastName, email, password }) => { 
     return await User.create({ 
-        FirstName: firstName,
-        LastName: lastName,
-        Email: email,
-        Password: password
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password
     });
 };
 
 // Get all Users
 const getAllUsers = async () => {
-    return await User.findAll();
+    return await User.findAll({where: {isActive: true}});
 };
 
 // Get one user
@@ -174,10 +169,22 @@ const getUser = async obj => {
   });
 };
 
+// User find by Id
+const findById = async (id) => {
+    return await User.findByPk(Id);
+}
+
 
 //Create Role
 const createRole = async ({title}) => {
     return await Role.create({
-        Title: title
+        title: title
     });
 }
+
+// find user type Client
+
+const findClientUserType = async () => {
+    return await UserType.findOne({where: {title: 'client'}});
+}
+

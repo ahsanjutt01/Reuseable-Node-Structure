@@ -4,13 +4,13 @@ const Sequelize = require('sequelize');
 const sequelize = require('../utils/database');
 
 const Role =  sequelize.define('roles', {
-    Id: {
+    id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    Title: {
+    title: {
         type: Sequelize.STRING,
         allowNull: false
     }
