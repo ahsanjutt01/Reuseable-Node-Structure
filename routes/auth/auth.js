@@ -15,7 +15,7 @@ router.post('/saveUserRole', passport.authenticate('jwt', {session: false}), aut
 
 router.get('/addUserRole', passport.authenticate('jwt', {session: false}), authController.getPageUserRoles);
 
-router.get('/users', passport.authenticate('jwt', {session: false}), authController.getUsers);
+// router.get('/users', passport.authenticate('jwt', {session: false}), authController.getUsers);
 
 router.post('/addRole', passport.authenticate('jwt', {session: false}), authController.postRole);
 

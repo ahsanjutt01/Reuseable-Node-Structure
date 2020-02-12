@@ -43,7 +43,7 @@ exports.postLogin = (req, res, next) => {
 
 // Post Signup
 exports.postSignup = (req, res, next) => {
-    const { firstName, lastName, email, password, isAgreeTerms} = req.body;
+    const { firstName, lastName, email, password, isAgreeTerms, zipCode} = req.body;
     // console.log(firstName + ' ' + lastName + ' ' + email + ' ' + password);
     getUser({email: email}).then(user => {
         if(!user) {
@@ -58,7 +58,9 @@ exports.postSignup = (req, res, next) => {
                     email: email,
                     password: hashedPassword,
                     isAgreeTerms: isAgreeTerms,
-                    userTypeId: userTypeId
+                    userTypeId: userTypeId,
+                    isActive: true,
+                    zipCode: zipCode
                 });
                 return userObj.save();
             });
