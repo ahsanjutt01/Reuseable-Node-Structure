@@ -6,6 +6,10 @@ const Role = require('../models/role');
 const UserRole = require('../models/user-role');
 const UserType = require('../models/userType');
 const Catagory = require('../models/catagory');
+const ListingHelper = require('../_helpers/listingHelper');
+
+const helper = require('../_helpers/helper');
+
 
 //================================= USER MIDDLEWARE ====================================
 
@@ -59,6 +63,7 @@ exports.postSignup = (req, res, next) => {
                 return userObj.save();
             });
         }).then(result => {
+            helper.sendEmail(email, 'Signup Successfull', `<h1> Wellcome ${firstName} ${lastName} to littlewins.`);
             return res.status(201).json({msg: 'successfulll login.', result: result});
         })
         } else {
@@ -158,6 +163,86 @@ exports.postUpdateCatagory = (req, res, next) => {
 //================================= END CATAGORY MIDDLEWARE ====================================
 
 
+//================================= START Listing MIDDLEWARE ====================================
+
+exports.postListing = (req, res, next) => {
+    const {
+        title, description, isFree, price, date, isWillingToPayShipingCharges,
+        isWillingToMeet, state, isActiveListing, condition, imageUrl, catagoryId
+    } = req.body;
+
+    const user = req.jwtOptions.user;
+
+    ListingHelper.createListing(
+        user,
+        title,
+        description,
+        isFree,
+        price,
+        date,
+        isWillingToPayShipingCharges,
+        isWillingToMeet,
+        state,
+        isActiveListing,
+        condition,
+        imageUrl,
+        catagoryId
+    ).then( () => {
+        res.status(201).json({msg: 'Added Successfully'});
+    });
+}
+
+exports.getAllListing = (req, res, next) => {
+    const user = req.jwtOptions.user;
+    ListingHelper.getAllListing(user).then(listings => {
+        // const Listings = listings;
+        // Listings.forEach(element => {
+        //     console.log('ELEMENT-------------------', element.user);
+        //     delete element.user;
+        //     Listings.push(element);
+        //     console.log('ELEMENT- AFTER DELETTE------------------', element.user);
+
+        // });
+        // listings = listings.map(listing => { delete listing.user; return listing});
+        return res.status(200).json({listings: listings});
+    });
+}
+
+exports.getOneListing = (req, res, next) => {
+    const id = req.query.id;
+    const user = req.jwtOptions.user;
+
+    ListingHelper.findOne(id, user).then(listing => {
+        return res.status(200).json({listing: listing});
+    });
+}
+
+exports.postupdateListing = (req, res, next) => {
+ const {
+        id, title, description, isFree, price, date, isWillingToPayShipingCharges,
+        isWillingToMeet, state, isActiveListing, condition, imageUrl, catagoryId
+    } = req.body;  
+    ListingHelper.updateListing(
+        id,
+        title,
+        description,
+        isFree,
+        price,
+        date,
+        isWillingToPayShipingCharges,
+        isWillingToMeet,
+        state,
+        isActiveListing,
+        condition,
+        catagoryId
+    ).then( (listing) => {
+        res.status(201).json({msg: 'Updated Successfully'});
+    });
+}
+
+
+
+//================================= END Listing MIDDLEWARE ====================================
 
 
 // ===================HELPER FUNCTION=========================

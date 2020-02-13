@@ -7,13 +7,18 @@ const passportJWT = require('passport-jwt');
 const cookieParser = require('cookie-parser');
 
 const sequelize = require('./utils/database');
-const authData = require('./routes/auth/auth');
 const User = require('./models/user');
 const Role = require('./models/role');
 const UserRole = require('./models/user-role');
 const UserType = require('./models/userType');
-
+const Listing = require('./models/listing');
+const ListingImage = require('./models/listingImages');
+const Catagory = require('./models/catagory');
+//Routes
 const adminRoutes = require('./routes/auth/admin');
+const authData = require('./routes/auth/auth');
+
+
 
 
 
@@ -103,6 +108,12 @@ Role.belongsToMany(User, { through: UserRole });
 UserType.hasMany(User);
 User.belongsTo(UserType);
 
+Listing.hasMany(ListingImage);
+ListingImage.belongsTo(Listing);
+User.hasMany(Listing);
+Listing.belongsTo(User);
+Catagory.hasMany(Listing);
+Listing.belongsTo(Catagory);
 
 
 sequelize

@@ -25,6 +25,14 @@ router.post('/deleteCatagory', passport.authenticate('jwt', {session: false}), a
 
 router.post('/updateCatagory', passport.authenticate('jwt', {session: false}), adminController.postUpdateCatagory);
 
+router.post('/createListing', passport.authenticate('jwt', {session: false}), adminController.postListing);
+
+router.get('/getListings', passport.authenticate('jwt', {session: false}), adminController.getAllListing);
+
+router.get('/getOneListing', passport.authenticate('jwt', {session: false}), adminController.getOneListing);
+
+router.post('/updateListing', passport.authenticate('jwt', {session: false}), adminController.postupdateListing);
+
 
 module.exports = router;
 
