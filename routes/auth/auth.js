@@ -13,7 +13,7 @@ router.post('/signup', authController.postSignup);
 
 router.post('/saveUserRole', passport.authenticate('jwt', {session: false}), authController.addUserRoles);
 
-router.get('/addUserRole', passport.authenticate('jwt', {session: false}), authController.getPageUserRoles);
+router.get('/getRole', passport.authenticate('jwt', {session: false}), authController.getPageUserRoles);
 
 // router.get('/users', passport.authenticate('jwt', {session: false}), authController.getUsers);
 
