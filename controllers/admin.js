@@ -121,7 +121,7 @@ exports.postDeleteAdminUser = (req, res, next) => {
         if(user) {
             user.isActive = false;
             user.save().then(() => {
-              res.status(200).json({msg: user Deleted successfully});  
+              res.status(200).json({msg: 'User deleted successfully'});  
             });
         } else {
             return res.status(500).json({msg: 'User not found.'});
