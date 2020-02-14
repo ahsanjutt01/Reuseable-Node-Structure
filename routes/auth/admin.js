@@ -33,6 +33,7 @@ router.get('/getOneListing', passport.authenticate('jwt', {session: false}), adm
 
 router.post('/updateListing', passport.authenticate('jwt', {session: false}), adminController.postupdateListing);
 
+router.post('/deleteAdminUser', passport.authenticate('jwt', {session: false}), adminController.postDeleteAdminUser);
 
 module.exports = router;
 

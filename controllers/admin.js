@@ -114,6 +114,20 @@ exports.getClientUsers = (req, res, next) => {
     });
 };
 
+//Delete Admin User
+exports.postDeleteAdminUser = (req, res, next) => {
+    const { id } = req.body;
+    getUser({id: id,isActive: true}).then(user => {
+        if(user) {
+            user.isActive = false;
+            user.save().then(() => {
+              res.status(200).json({msg: user Deleted successfully});  
+            });
+        } else {
+            return res.status(500).json({msg: 'User not found.'});
+        }
+    });
+}
 
 //================================= END USER MIDDLEWARE ====================================
 
