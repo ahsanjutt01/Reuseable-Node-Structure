@@ -28,7 +28,7 @@ exports.updateUser = (req, res, next) => {
             userFromDb.email = email;
             // userFromDb.zipCode = zi;
             return userFromDb.save().then(result => {
-                return res.status(200).json({msg: 'update Successfull', result: result});
+                return res.status(200).json({msg: 'update successfull', result: result});
             }).catch(err => {
                 console.log('ERROR updating ========================= ', err);
             });;
@@ -182,9 +182,15 @@ exports.postUpdateCatagory = (req, res, next) => {
 exports.postListing = (req, res, next) => {
     const {
         title, description, isFree, price, date, isWillingToPayShipingCharges,
-        isWillingToMeet, state, isActiveListing, condition, imageUrl, catagoryId
+        isWillingToMeet, state, isActiveListing, condition, catagoryId
     } = req.body;
-
+    
+    const images = req.file;
+    console.log('=======IMaGES====================IMAGES===========', images);
+    if(!images) {
+        return res.status(500).json({msg: 'Attached file is not a image'});
+    }
+    const imageUrls = [{ url: images.path}];
     const user = req.jwtOptions.user;
 
     ListingHelper.createListing(
@@ -199,7 +205,7 @@ exports.postListing = (req, res, next) => {
         state,
         isActiveListing,
         condition,
-        imageUrl,
+        imageUrls,
         catagoryId
     ).then( () => {
         res.status(201).json({msg: 'Added Successfully'});

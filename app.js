@@ -6,6 +6,7 @@ const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const cookieParser = require('cookie-parser');
 
+const multer = require('multer');
 const sequelize = require('./utils/database');
 const User = require('./models/user');
 const Role = require('./models/role');
@@ -67,10 +68,33 @@ let strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + '-' + file.originalname);
+  },
+});
 
-app.use(bodyparser.json());
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+app.use(bodyparser.json({ limit: '50mb' }));
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('imageUrl'));
 app.use(bodyparser.urlencoded({ extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 
 // app.use( (req, res, next) => {
 //     res.setHeader('Access-Control-Allow-Origin', '*');
