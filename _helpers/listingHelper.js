@@ -89,7 +89,7 @@ exports.findOne = (id, user) => {
 
 exports.getListingByCatgories = (user, catagoryId) => {
     return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
-        listing = listing.filter(x => (x.userId !== user.id && x.catagoryId !== catagoryId && x.catagoryId !== null));
+        listing = listing.filter(x => (x.userId !== user.id && x.catagoryId === catagoryId && x.catagoryId !== null));
         return listing;
     }).catch(err => console.log('Error in hellper methord getListingByCatgories', err))
 }
