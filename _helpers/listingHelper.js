@@ -77,8 +77,19 @@ exports.getMyListing = (user) => {
 }
 
 exports.getAllListingForClients = (user) => {
-    return Listing.findAll({where: {userId: user.id, isActive: true}, include: ['listingImages']});
+    return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
+        listing = listing.filter(x => x.userId !== user.id);
+        return listing;
+    }).catch(err => console.log('Error in hellper methord getListingByCatgories', err))
+    // return Listing.findAll({where: {userId: user.id, isActive: true}, include: ['listingImages']});
 }
 exports.findOne = (id, user) => {
     return user.getListings({where: {id: id, isActive: true}, include: ['listingImages']});
+}
+
+exports.getListingByCatgories = (user, catagoryId) => {
+    return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
+        listing = listing.filter(x => (x.userId !== user.id && x.catagoryId !== catagoryId && x.catagoryId !== null));
+        return listing;
+    }).catch(err => console.log('Error in hellper methord getListingByCatgories', err))
 }

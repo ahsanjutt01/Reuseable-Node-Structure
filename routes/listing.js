@@ -13,7 +13,7 @@ router.get('/getAllCatagories', adminController.getAllCatagories);
 
 router.get('/getMyListing', passport.authenticate('jwt', {session: false}), listingController.getMyListing);
 
-router.get('/getMyListing', passport.authenticate('jwt', {session: false}), listingController.getMyListing);
+router.get('/getListingByCatgoryId', passport.authenticate('jwt', {session: false}), listingController.getListingByCatgories);
 
 
 module.exports = router;
