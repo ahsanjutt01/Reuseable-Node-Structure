@@ -18,6 +18,7 @@ const Catagory = require('./models/catagory');
 //Routes
 const adminRoutes = require('./routes/auth/admin');
 const authData = require('./routes/auth/auth');
+const listingRoutes = require('./routes/listing');
 
 
 
@@ -96,12 +97,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
-// app.use( (req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', '*');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//     next();
-// });
+app.use( (req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
 
 app.use((req, res, next) => {
     req.jwtOptions = jwtOptions;
@@ -109,17 +110,15 @@ app.use((req, res, next) => {
 });
 
 
-//  Routes
+//  ====================== Routes ======================
 app.use(authData);
 app.use('/admin', adminRoutes);
+app.use('/client', listingRoutes);
 
 //If Page not found
 app.use((req, res, next) => {
     res.status(404).json('404 not found');
 });
-
-
-
 
 
 // Relationships

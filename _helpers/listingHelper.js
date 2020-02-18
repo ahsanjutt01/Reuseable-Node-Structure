@@ -68,11 +68,17 @@ exports.updateListing  = (
     }).catch(err => console.log(err));
 }
 
-exports.getAllListing = (user) => {
-    return user.getListings({where: {isActive: true}, include: ['listingImages']});
-    // return user.getListings({where: {isActive: true}, include: [{ all: true, nested: true }]});
+exports.getAllListing = () => {
+    return Listing.findAll({where: {isActive: true}, include: ['listingImages']});
 }
 
+exports.getMyListing = (user) => {
+    return user.getListings({where: {isActive: true}, include: ['listingImages']});
+}
+
+exports.getAllListingForClients = (user) => {
+    return Listing.findAll({where: {userId: user.id, isActive: true}, include: ['listingImages']});
+}
 exports.findOne = (id, user) => {
     return user.getListings({where: {id: id, isActive: true}, include: ['listingImages']});
 }

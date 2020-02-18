@@ -186,7 +186,7 @@ exports.postListing = (req, res, next) => {
     } = req.body;
     
     const images = req.file;
-    console.log('=======IMaGES====================IMAGES===========', images);
+    console.log('=======IMAGES====================IMAGES===========', images);
     if(!images) {
         return res.status(500).json({msg: 'Attached file is not a image'});
     }
