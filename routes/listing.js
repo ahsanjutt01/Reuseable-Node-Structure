@@ -19,6 +19,7 @@ router.get('/getMyListing', passport.authenticate('jwt', {session: false}), list
 
 router.get('/getListingByCatgoryId', passport.authenticate('jwt', {session: false}), listingController.getListingByCatgories);
 
+router.post('/createListing', passport.authenticate('jwt', {session: false}), adminController.postListing);
 
 
 module.exports = router;
