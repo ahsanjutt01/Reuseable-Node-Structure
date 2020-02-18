@@ -11,7 +11,7 @@ router.get('/getAllListingForClients', listingController.getAllListingForClients
 
 router.get('/getAllCatagories', adminController.getAllCatagories);
 
-router.get('/getListingByBeforeLogin', listingController.getAllListingForClientsBeforeLogin);
+router.get('/getListingBeforeLogin', listingController.getAllListingForClientsBeforeLogin);
 
 router.get('/getListingByCatgoryIdBeforeLogin', listingController.getListingByCatgoriesBeforeLogin);
 

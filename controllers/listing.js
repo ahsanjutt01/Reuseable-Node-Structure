@@ -32,7 +32,6 @@ exports.getListingByCatgoriesBeforeLogin = (req, res, next) => {
 }
 
 exports.getAllListingForClientsBeforeLogin = (req, res, next) => {
-    // const user = req.jwtOptions.user;
     listingHelper.getAllListingForClientsBeforeLogin().then(listings => {
         return res.status(200).json({listings: listings});
     });
