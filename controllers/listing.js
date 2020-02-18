@@ -21,5 +21,19 @@ exports.getListingByCatgories = (req, res, next) => {
     listingHelper.getListingByCatgories(user, catagoryId).then(listings => {
         return res.status(200).json({listings: listings});
     });
+}
 
+exports.getListingByCatgoriesBeforeLogin = (req, res, next) => {
+    // const user = req.jwtOptions.user;
+    const catagoryId = req.query.catagoryId;
+    listingHelper.getListingByCatgoriesBeforeLogin(catagoryId).then(listings => {
+        return res.status(200).json({listings: listings});
+    });
+}
+
+exports.getAllListingForClientsBeforeLogin = (req, res, next) => {
+    // const user = req.jwtOptions.user;
+    listingHelper.getAllListingForClientsBeforeLogin().then(listings => {
+        return res.status(200).json({listings: listings});
+    });
 }

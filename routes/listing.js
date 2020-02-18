@@ -11,9 +11,14 @@ router.get('/getAllListingForClients', listingController.getAllListingForClients
 
 router.get('/getAllCatagories', adminController.getAllCatagories);
 
+router.get('/getListingByBeforeLogin', adminController.getAllListingForClientsBeforeLogin);
+
+router.get('/getListingByCatgoryIdBeforeLogin', listingController.getListingByCatgoriesBeforeLogin);
+
 router.get('/getMyListing', passport.authenticate('jwt', {session: false}), listingController.getMyListing);
 
 router.get('/getListingByCatgoryId', passport.authenticate('jwt', {session: false}), listingController.getListingByCatgories);
+
 
 
 module.exports = router;

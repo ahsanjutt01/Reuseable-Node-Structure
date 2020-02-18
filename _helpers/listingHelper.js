@@ -93,3 +93,18 @@ exports.getListingByCatgories = (user, catagoryId) => {
         return listing;
     }).catch(err => console.log('Error in helper methord getListingByCatgories', err))
 }
+
+exports.getListingByCatgoriesBeforeLogin = (catagoryId) => {
+    return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
+        listing = listing.filter(x => (x.catagoryId == catagoryId && x.catagoryId !== null));
+        return listing;
+    }).catch(err => console.log('Error in helper methord getListingByCatgories', err))
+}
+
+exports.getAllListingForClientsBeforeLogin = (user) => {
+    return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
+        listing = listing.filter(x => x.userId !== user.id);
+        return listing;
+    }).catch(err => console.log('Error in hellper methord getListingByCatgories', err))
+    // return Listing.findAll({where: {userId: user.id, isActive: true}, include: ['listingImages']});
+}
