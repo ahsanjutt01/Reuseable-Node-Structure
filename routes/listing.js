@@ -13,7 +13,7 @@ router.get('/getAllCatagories', adminController.getAllCatagories);
 
 router.get('/getListingBeforeLogin', listingController.getAllListingForClientsBeforeLogin);
 
-router.get('/getListingByCatgoryIdBeforeLogin', listingController.getListingByCatgoriesBeforeLogin);
+router.post('/getListingByCatgoryIdBeforeLogin', listingController.getListingByCatgoriesBeforeLogin);
 
 router.get('/getMyListing', passport.authenticate('jwt', {session: false}), listingController.getMyListing);
 

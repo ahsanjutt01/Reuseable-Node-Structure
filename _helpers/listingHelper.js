@@ -1,3 +1,6 @@
+const { Op } = require("sequelize");
+
+
 const Listing = require('../models/listing');
 const User = require('../models/user');
 exports.createListing = (
@@ -94,11 +97,19 @@ exports.getListingByCatgories = (user, catagoryId) => {
     }).catch(err => console.log('Error in helper methord getListingByCatgories', err))
 }
 
-exports.getListingByCatgoriesBeforeLogin = (catagoryId) => {
-    return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
-        listing = listing.filter(x => (x.catagoryId == catagoryId && x.catagoryId !== null));
-        return listing;
-    }).catch(err => console.log('Error in helper methord getListingByCatgories', err))
+exports.getListingByCatgoriesBeforeLogin = (catagoryIds) => {
+    // return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
+    //     listing = listing.filter(x => (x.catagoryId == catagoryId && x.catagoryId !== null));
+    //     return listing;
+    // }).catch(err => console.log('Error in helper methord getListingByCatgories', err))
+
+    const obj = [];
+
+    catagoryIds.forEach(element => {
+        obj.push({ catagoryId: {$eq: element.id}});
+    });
+    console.log('>>>>>>>>>>>>>>>>', obj);
+    return Listing.findAll({where: {isActive: true, $or: obj}, include: ['listingImages']});
 }
 
 exports.getAllListingForClientsBeforeLogin = () => {
