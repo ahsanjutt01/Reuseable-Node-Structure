@@ -26,11 +26,14 @@ exports.getListingByCatgories = (req, res, next) => {
 exports.getListingByCatgoriesBeforeLogin = (req, res, next) => {
     // const user = req.jwtOptions.user;
     // const catagoryId = req.query.catagoryId;
-    const { catagoryIds } = req.body;
-    console.log('CatagoryIds:.....>>>>>', catagoryIds);
+    const { filters, isWillingToPayShipingCharges, isWillingToMeet } = req.body;
+    console.log('CatagoryIds:.....>>>>>', filters,
+    'isWillingToPayShipingCharges======', isWillingToPayShipingCharges,
+    'isWillingToMeet===', isWillingToMeet);
     
-    console.log('OBJ================,,,""..>>>>>', catagoryIds);
-    listingHelper.getListingByCatgoriesBeforeLogin(catagoryIds).then(listings => {
+    listingHelper.getListingByCatgoriesBeforeLogin(
+        filters, isWillingToPayShipingCharges, isWillingToMeet
+        ).then(listings => {
         return res.status(200).json({listings: listings});
     });
 }
