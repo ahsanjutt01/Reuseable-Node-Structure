@@ -60,7 +60,7 @@ exports.postSignup = (req, res, next) => {
                     isAgreeTerms: isAgreeTerms,
                     userTypeId: userTypeId,
                     isActive: true,
-                    zipCode: zipCode
+                    zipcode: zipCode
                 });
                 return userObj.save();
             });
@@ -150,12 +150,13 @@ exports.postResetPassword = (req, res, next) => {
 
 
 // Create User
-const createUser = async ({ firstName, lastName, email, password }) => { 
+const createUser = async ({ firstName, lastName, email, password, zipcode }) => { 
     return await User.create({ 
         firstName: firstName,
         lastName: lastName,
         email: email,
-        password: password
+        password: password,
+        zipcode: zipcode,
     });
 };
 

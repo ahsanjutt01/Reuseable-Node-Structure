@@ -26,6 +26,7 @@ const User =  sequelize.define('users', {
         type: Sequelize.STRING(1000),
         allowNull: false
     },
+    zipcode: Sequelize.STRING,
     isAgreeTerms: Sequelize.BOOLEAN,
     isActive: Sequelize.BOOLEAN
 });
