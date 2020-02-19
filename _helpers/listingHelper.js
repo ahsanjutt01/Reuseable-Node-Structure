@@ -1,6 +1,9 @@
+const { Op } = require("sequelize");
+
+
 const Listing = require('../models/listing');
 const User = require('../models/user');
-const { Op } = require("sequelize");
+
 exports.createListing = (
     user,
     title,
@@ -69,7 +72,11 @@ exports.updateListing  = (
     }).catch(err => console.log(err));
 }
 
-exports.getAllListing = (user) => {
+exports.getAllListing = () => {
+    return Listing.findAll({where: {isActive: true}, include: ['listingImages']});
+}
+
+exports.getMyListing = (user) => {
     return user.getListings({where: {isActive: true}, include: ['listingImages']});
     // return Listing.findAll({where: {isActive: true}, include: [{ all: true, nested: true }]});
 }
@@ -219,6 +226,70 @@ checkFilterType = (value,filterType) => {
     }
 }
 
+exports.getAllListingForClients = (user) => {
+    return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
+        listing = listing.filter(x => x.userId !== user.id);
+        return listing;
+    }).catch(err => console.log('Error in hellper methord getListingByCatgories', err))
+    // return Listing.findAll({where: {userId: user.id, isActive: true}, include: ['listingImages']});
+}
 exports.findOne = (id, user) => {
     return Listing.findAll({where: {id: id, isActive: true}, include: ['listingImages']});
+}
+
+exports.getListingByCatgories = (user, catagoryId) => {
+    return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
+        listing = listing.filter(x => (x.userId !== user.id && (x.catagoryId == catagoryId && x.catagoryId !== null)));
+        return listing;
+    }).catch(err => console.log('Error in helper methord getListingByCatgories', err))
+}
+
+exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges, isWillingToMeet) => {
+    // return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
+    //     listing = listing.filter(x => (x.catagoryId == catagoryId && x.catagoryId !== null));
+    //     return listing;
+    // }).catch(err => console.log('Error in helper methord getListingByCatgories', err))
+
+    const filters = [];
+    if(filter.catagoryIds !== null && filter.catagoryIds !== undefined && filter.catagoryIds.length > 0){
+        filter.catagoryIds.forEach(element => {
+            if(element !== null && element !== undefined) {
+                filters.push({ catagoryId: {$eq: element.id}});
+            }
+        });
+    }
+    // if (filter.zipCodes !== null && filter.zipCodes !== undefined && filter.zipCodes.length > 0) {
+    //     filter.zipCodes.forEach(element => {
+    //         if(element !== null && element !== undefined) {
+    //             filter.push({ zipCode: {$eq: element.zipCode}});
+    //         }
+    //     });
+    // }
+    
+    console.log('>>>>>>>>>>>>>>>>', filters);
+
+    if (isWillingToPayShipingCharges!== null && isWillingToPayShipingCharges !== undefined
+        && isWillingToMeet !== null && isWillingToMeet !== undefined) {
+            console.log('RUN isWillingToMeet and isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>')
+        return Listing.findAll({where: {isActive: true, $or: filter, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
+    }
+
+    if (isWillingToPayShipingCharges!== null && isWillingToPayShipingCharges !== undefined) {
+        console.log('RUN isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>', isWillingToPayShipingCharges)
+        
+        return Listing.findAll({where: {isActive: true, $or: filter, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
+
+    }
+    if (isWillingToMeet !== null && isWillingToMeet !== undefined) {
+        console.log('RUN isWillingToMeet>>>>>>>>>>>>>>>>>>>>', isWillingToPayShipingCharges)
+
+        return Listing.findAll({where: {isActive: true, $or: filter, isWillingToMeet: isWillingToMeet}, include: ['listingImages']});
+    }
+    console.log('Only Fillters Can Run');
+    return Listing.findAll({where: {isActive: true, $or: filters}, include: ['listingImages']});
+}
+
+exports.getAllListingForClientsBeforeLogin = () => {
+    return Listing.findAll({where: {isActive: true}, include: ['listingImages']});
+    // return Listing.findAll({where: {userId: user.id, isActive: true}, include: ['listingImages']});
 }
