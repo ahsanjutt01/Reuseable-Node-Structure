@@ -228,6 +228,21 @@ exports.getAllListing = (req, res, next) => {
     });
 }
 
+exports.getFilterListing = (req, res, next) => {
+    const title = req.query.title;
+    const titleType = req.query.titleType;
+    const email  = req.query.email;
+    const emailType = req.query.emailType;
+    const catID = req.query.catID;
+    const state = req.query.state;
+    const user = req.jwtOptions.user;
+    ListingHelper.getFilterListing(title,titleType,email,emailType,catID,state,user).then(listing => {
+        return res.status(200).json({listings: listing, message: "lists fetched successfully..!", hasErrors: false});
+    }).catch(error => {
+        res.status(500).json({message: "lists fetched failed..!", hasErrors: true});
+    })
+}
+
 exports.getOneListing = (req, res, next) => {
     const id = req.query.id;
     const user = req.jwtOptions.user;
@@ -341,3 +356,5 @@ return await Catagory.findByPk(id);
 const getAllCatagories = async () => {
     return await Catagory.findAll({where: {isActive: true}});
 }
+//============================== Listing Filter Functions ==========================================
+ 

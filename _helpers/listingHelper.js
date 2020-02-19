@@ -3,6 +3,7 @@ const { Op } = require("sequelize");
 
 const Listing = require('../models/listing');
 const User = require('../models/user');
+
 exports.createListing = (
     user,
     title,
@@ -38,7 +39,7 @@ exports.createListing = (
             });
         }
             return listing;
-    }).catch(err => console.log('ERROR =========================== ',err));
+    }).catch(err => console.log('ERROR ================== ',err));
 }
 
 exports.updateListing  = (
@@ -77,6 +78,152 @@ exports.getAllListing = () => {
 
 exports.getMyListing = (user) => {
     return user.getListings({where: {isActive: true}, include: ['listingImages']});
+    // return Listing.findAll({where: {isActive: true}, include: [{ all: true, nested: true }]});
+}
+
+const getAllListings = () => {
+    return Listing.findAll();
+}
+
+
+
+exports.getFilterListing = (title, titleType, email, emailType, catID, state, user) => {
+    console.log(title,titleType,email,emailType,catID, state);
+    if(title == "" && email == "" && catID == 0 && state.toLowerCase() == "any") {
+        return getAllListings();
+    } else if(title != "" && email == "" && catID == 0 && state.toLowerCase() == "any") {
+        var resultValue = checkFilterType(title,titleType.toLowerCase())
+        if(resultValue != title) {
+            return Listing.findAll({where: {title: {[Op.like]: resultValue}}, include: ['listingImages']});
+        } else {
+            return Listing.findAll({where: {title: resultValue}, include: ['listingImages']});
+        }
+    } else if(title == "" && email != "" && catID == 0 && state.toLowerCase() == "any") {
+        var emailResult = checkFilterType(email, emailType);
+        if(emailResult != email) {
+            return Listing.findAll({include: [{model: User, where: {email: {[Op.like]: emailResult}}}]});
+        } else {
+            return Listing.findAll({include: [{model: User, where: {email: emailResult}}]});
+        }
+    } else if(title != "" && email != "" && catID == 0 && state.toLowerCase() == "any") {
+        var titleResult = checkFilterType(title, titleType.toLowerCase());
+        var emailResult = checkFilterType(email, emailType.toLowerCase());
+        if(title!= titleResult && emailResult != email) {
+            return Listing.findAll({where: {title: {[Op.like]: titleResult}}, include: [{model:User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
+        } else if(title == titleResult && emailResult!=email) {
+            return Listing.findAll({where: {title: titleResult}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
+        } else if(title != titleResult && email == emailResult) {
+            return Listing.findAll({where: {title: {[Op.like]: titleResult}}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        } else {
+            return Listing.findAll({where: {title: titleResult}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        }
+    } else if(title !="" && email!="" && catID !=0 && state.toLowerCase() == "any") {
+        var titleResult = checkFilterType(title, titleType);
+        var emailResult = checkFilterType(email, emailType);
+        if(title != titleResult && email != emailResult) {
+            return Listing.findAll({where: {title: {[Op.like]: titleResult}, catagoryId: catID}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']})
+        }else if(title == titleResult && email != emailResult) {
+            return Listing.findAll({where: {title: titleResult, catagoryId: catID}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
+        } else if(title != titleResult && email == emailResult) {
+            return Listing.findAll({where: {title: {[Op.like]: titleResult}, catagoryId: catID}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        } else {
+            return Listing.findAll({where: {title: titleResult, catagoryId: catID}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        }
+    } else if(title !="" && email!="" && catID ==0 && state.toLowerCase() != "any") {
+        var titleResult = checkFilterType(title, titleType);
+        var emailResult = checkFilterType(email, emailType);
+        if(title != titleResult && email != emailResult) {
+            return Listing.findAll({where: {title: {[Op.like]: titleResult}, state: state}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']})
+        }else if(title == titleResult && email != emailResult) {
+            return Listing.findAll({where: {title: titleResult, state: state}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
+        } else if(title != titleResult && email == emailResult) {
+            return Listing.findAll({where: {title: {[Op.like]: titleResult}, state: state}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        } else {
+            return Listing.findAll({where: {title: titleResult, state: state}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        }
+    } else if(title =="" && email=="" && catID ==0 && state.toLowerCase() != "any") {
+        return Listing.findAll({where: {state: state}, include: ['listingImages']});
+    } else if(title =="" && email=="" && catID !=0 && state.toLowerCase() == "any") {
+        return Listing.findAll({where: {state: state}, include: ['listingImages']});
+    } else if(title =="" && email=="" && catID !=0 && state.toLowerCase() != "any") {
+        return Listing.findAll({where: {state: state, catagoryId: catID}, include: ['listingImages']});
+    } else if(title =="" && email!="" && catID ==0 && state.toLowerCase() != "any") {
+        var emailResult = checkFilterType(email, emailType);
+        if(email != emailResult) {
+            return Listing.findAll({where: {state: state}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
+        } else {
+            return Listing.findAll({where: {state: state}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        }
+    } else if(title =="" && email!="" && catID !=0 && state.toLowerCase() == "any") {
+        var emailResult = checkFilterType(email, emailType);
+        if(email != emailResult) {
+            return Listing.findAll({where: {catagoryId: catID}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
+        } else {
+            return Listing.findAll({where: {catagoryId: catID}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        }
+    } else if(title =="" && email!="" && catID !=0 && state.toLowerCase() != "any") {
+        var emailResult = checkFilterType(email, emailType);
+        if(email != emailResult) {
+            return Listing.findAll({where: {state: state , catagoryId: catID}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
+        } else {
+            return Listing.findAll({where: {state: state ,catagoryId: catID}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        }
+    } else if(title !="" && email=="" && catID ==0 && state.toLowerCase() != "any") {
+        var titleResult = checkFilterType(title, titleType);
+        if(title != titleResult) {
+            return Listing.findAll({where: {title: {[Op.like]: titleResult} ,state: state}});
+        } else {
+            return Listing.findAll({where: {title: titleResult ,state: state}});
+        }
+    } else if(title !="" && email=="" && catID !=0 && state.toLowerCase() == "any") {
+        var titleResult = checkFilterType(title, titleType);
+        if(title != titleResult) {
+            return Listing.findAll({where: {title: {[Op.like]: titleResult} ,catagoryId: catID}});
+        } else {
+            return Listing.findAll({where: {title: titleResult ,catagoryId: catID}});
+        }
+    }  else if(title !="" && email=="" && catID !=0 && state.toLowerCase() != "any") {
+        var titleResult = checkFilterType(title, titleType);
+        if(title != titleResult) {
+            return Listing.findAll({where: {title: {[Op.like]: titleResult}, state: state ,catagoryId: catID}});
+        } else {
+            return Listing.findAll({where: {title: titleResult, state: state ,catagoryId: catID}});
+        }
+    } else {
+        var titleResult = checkFilterType(title, titleType);
+        var emailResult = checkFilterType(email, emailType);
+        console.log(titleResult, emailResult);
+        if(title != titleResult && email != emailResult) {
+            // console.log(Listing.findAll({where: {title: {[Op.like]: titleResult}, state: state , catagoryId: catID}, include: ['listingImages']}));
+            return Listing.findAll({where: {title: {[Op.like]: titleResult}, state: state , catagoryId: catID}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
+        }else if(title == titleResult && email != emailResult) {
+            return Listing.findAll({where: {title: titleResult, state: state, catagoryId: catID}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
+        } else if(title != titleResult && email == emailResult) {
+            return Listing.findAll({where: {title: {[Op.like]: titleResult}, state: state, catagoryId: catID}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        } else {
+            return Listing.findAll({where: {title: titleResult, state: state, catagoryId: catID}, include: [{model: User, where: {email: emailResult}}], include: ['listingImages']});
+        }
+    }
+}
+
+checkFilterType = (value,filterType) => {
+    switch(filterType) {
+        case "contains": {
+            return '%'+value+'%';
+        }
+        case "equals": {
+            return value;
+        }
+        case "starts with": {
+            return value + '%';
+        }
+        case "ends with": {
+            return '%'+value;
+        }
+        default: {
+            break;
+        }
+    }
 }
 
 exports.getAllListingForClients = (user) => {
@@ -87,7 +234,7 @@ exports.getAllListingForClients = (user) => {
     // return Listing.findAll({where: {userId: user.id, isActive: true}, include: ['listingImages']});
 }
 exports.findOne = (id, user) => {
-    return user.getListings({where: {id: id, isActive: true}, include: ['listingImages']});
+    return Listing.findAll({where: {id: id, isActive: true}, include: ['listingImages']});
 }
 
 exports.getListingByCatgories = (user, catagoryId) => {

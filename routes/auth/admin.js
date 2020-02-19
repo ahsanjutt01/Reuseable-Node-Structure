@@ -35,5 +35,7 @@ router.post('/updateListing', passport.authenticate('jwt', {session: false}), ad
 
 router.post('/deleteAdminUser', passport.authenticate('jwt', {session: false}), adminController.postDeleteAdminUser);
 
+router.get('/getFilteredListing', passport.authenticate('jwt', {session: false}), adminController.getFilterListing);
+
 module.exports = router;
 
