@@ -41,5 +41,7 @@ router.get('/getFilterCategories', passport.authenticate('jwt', {session: false}
 
 router.get('/getFilteredAdminUsers', passport.authenticate('jwt', {session: false}), adminController.getFilteredAdminUsers);
 
+router.get('/getFilteredUsers', passport.authenticate('jwt', {session: false}), adminController.getFilteredUsers);
+
 module.exports = router;
 
