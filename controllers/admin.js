@@ -9,7 +9,7 @@ const Catagory = require('../models/catagory');
 const ListingHelper = require('../_helpers/listingHelper');
 
 const helper = require('../_helpers/helper');
-
+const { Op } = require("sequelize");
 
 //================================= USER MIDDLEWARE ====================================
 
@@ -106,6 +106,7 @@ exports.getAdminUsers = (req, res, next) => {
     });
 };
 
+
 // Get All Client Users
 
 exports.getClientUsers = (req, res, next) => {
@@ -128,7 +129,32 @@ exports.postDeleteAdminUser = (req, res, next) => {
         }
     });
 }
+//Get Filtered Admin Users
+exports.getFilteredAdminUsers = (req, res, next) => {
+    const email = req.query.email;
+    const filterType = req.query.filterType;
+    const result = ListingHelper.checkFilterType(email,filterType)
+    if(email == "") {
+        User.findAll({where: {isActive: true, userTypeId: 2}}).then(response => {
+            res.status(200).json({users: response, message: 'Admin users fetched successfully', hasErrors: false})
+        }).catch(error => {
+            res.status(500).json({message: 'Fetching failed', hasErrors: true});
+        })
+    } else if(email != result) {
+      User.findAll({where: {email: {[Op.like]: result}, isActive: true, userTypeId: 2}}).then(response => {
+          res.status(200).json({users: response, message: 'Admin users fetched successfully', hasErrors: false});
+      }).catch(error => {
+          res.status(500).json({message: 'Fetching failed', hasErrors: true});
+      });
+    } else {
+        User.findAll({where: {email: email, isActive: true, userTypeId: 2}}).then(response => {
+            res.status(200).json({users: response, message: 'Admin users fetched successfully', hasErrors: false});
+        }).catch(error => {
+            res.status(500).json({message: 'Fetching failed', hasErrors: true});
+        })
+    }
 
+}
 //================================= END USER MIDDLEWARE ====================================
 
 
@@ -172,7 +198,32 @@ exports.postUpdateCatagory = (req, res, next) => {
     }).catch(err => console.log(err));
 }
 
+// Get Filter Category
 
+exports.getFilterCategories = (req,res,next) => {
+    const catName = req.query.catName;
+    const catFilterType = req.query.filterType;
+    const result = ListingHelper.checkFilterType(catName,catFilterType)
+        if(catName == "") {
+            Catagory.findAll({where: {isActive: true}}).then(response => {
+                res.status(200).json({catagory: response, message: 'Categories fetched successfully', hasErrors: false})
+            }).catch(error => {
+                res.status(500).json({message: 'Fetching failed', hasErrors: true});
+            })
+        } else if(catName != result) {
+          Catagory.findAll({where: {title: {[Op.like]: result}, isActive: true}}).then(response => {
+              res.status(200).json({catagory: response, message: 'Categories fetched successfully', hasErrors: false});
+          }).catch(error => {
+              res.status(500).json({message: 'Fetching failed', hasErrors: true});
+          });
+        } else {
+            Catagory.findAll({where: {title: catName, isActive: true}}).then(response => {
+                res.status(200).json({catagory: response, message: 'Categories fetched successfully', hasErrors: false});
+            }).catch(error => {
+                res.status(500).json({message: 'Fetching failed', hasErrors: true});
+            })
+        }
+}
 
 //================================= END CATAGORY MIDDLEWARE ====================================
 
