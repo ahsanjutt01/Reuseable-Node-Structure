@@ -202,7 +202,7 @@ const findClientUserType = async () => {
 }
 
 const getAllZipcode = async () => {
-    return await User.findAll({attributes: [Sequelize.fn('DISTINCT', Sequelize.col('zipcode')) ,'zipcode'], where: { isActive: true}});
+    return await User.findAll({attributes: [Sequelize.fn('DISTINCT', Sequelize.col('zipcode')) ,'zipcode'], where: { isActive: true, zipcode: {$:null}}});
 }
 //get All Catagory
 const getAllCatagories = async () => {
