@@ -11,6 +11,9 @@ router.post('/login', authController.postLogin);
 
 router.post('/signup', authController.postSignup);
 
+
+router.get('/getCatagoriesAndZipCodes', authController.getCatagoriesAndZipCodes);
+
 router.post('/saveUserRole', passport.authenticate('jwt', {session: false}), authController.addUserRoles);
 
 router.get('/getRole', passport.authenticate('jwt', {session: false}), authController.getPageUserRoles);

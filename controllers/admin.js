@@ -207,8 +207,10 @@ exports.postListing = (req, res, next) => {
         condition,
         imageUrls,
         catagoryId
-    ).then( () => {
-        res.status(201).json({msg: 'Added Successfully'});
+    ).then( ( listing) => {
+        res.status(201).json({msg: 'Listing Added Successfully', listing: listing});
+    }).catch(err => {
+        res.status(201).json({msg: 'Error', error: err});
     });
 }
 

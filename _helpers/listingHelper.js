@@ -271,18 +271,15 @@ exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges
     console.log('>>>>>>>>>>>>>>>>ZIPCODE>>>>>>>>.', zipcodeFilter);
 
     if(zipcodeFilter.length > 0) {
-        
-        return Listing.findAll({where: {isActive: true, $or: filters,
-            isWillingToPayShipingCharges: isWillingToPayShipingCharges,
-            include: {
-                model: Listing.users, 
-                where: {
-                  zipcode: filter.zipcodes[0].zipcode
-                }
-            }
-        }, include: ['listingImages']});
+         console.log('ZIPCODE RUNS >>>>>>>>>>>>>>>>>>>>>>>>>>>>.', filter.zipcodes[0].zipcode)
+        return Listing.findAll( { where: {isActive: true, $and: filters,
+            isWillingToPayShipingCharges: isWillingToPayShipingCharges
+        },include: [{
+            model: User, 
+            where: { zipcode: '61001'}
+        }], include: ['listingImages']});
     }
-    if (isWillingToPayShipingCharges!== null && isWillingToPayShipingCharges !== undefined
+    if (isWillingToPayShipingCharges !== null && isWillingToPayShipingCharges !== undefined
         && isWillingToMeet !== null && isWillingToMeet !== undefined) {
             console.log('RUN isWillingToMeet and isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>')
         return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
