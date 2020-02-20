@@ -43,3 +43,12 @@ exports.getAllListingForClientsBeforeLogin = (req, res, next) => {
         return res.status(200).json({listings: listings});
     });
 }
+
+exports.getSearchByName = (req, res, next) => {
+    const { title } = req.query;
+
+    listingHelper.getSearchByName(title).then( listings => {
+        return res.status(200).json({listings: listings});
+    }).catch(err => res.status(200).json({error: err}));
+    
+}

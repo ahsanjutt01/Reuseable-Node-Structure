@@ -13,6 +13,8 @@ router.get('/getAllCatagories', adminController.getAllCatagories);
 
 router.get('/getListingBeforeLogin', listingController.getAllListingForClientsBeforeLogin);
 
+router.get('/searchByName', listingController.getSearchByName);
+
 router.post('/getListingByCatgoryIdBeforeLogin', listingController.getListingByCatgoriesBeforeLogin);
 
 router.get('/getMyListing', passport.authenticate('jwt', {session: false}), listingController.getMyListing);
@@ -20,6 +22,5 @@ router.get('/getMyListing', passport.authenticate('jwt', {session: false}), list
 router.get('/getListingByCatgoryId', passport.authenticate('jwt', {session: false}), listingController.getListingByCatgories);
 
 router.post('/createListing', passport.authenticate('jwt', {session: false}), adminController.postListing);
-
 
 module.exports = router;

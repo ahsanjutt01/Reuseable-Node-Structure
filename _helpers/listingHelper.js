@@ -270,15 +270,15 @@ exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges
     console.log('>>>>>>>>>>>>>>>>', filters);
     console.log('>>>>>>>>>>>>>>>>ZIPCODE>>>>>>>>.', zipcodeFilter);
 
-    if(zipcodeFilter.length > 0) {
-         console.log('ZIPCODE RUNS >>>>>>>>>>>>>>>>>>>>>>>>>>>>.', filter.zipcodes[0].zipcode)
-        return Listing.findAll( { where: {isActive: true, $and: filters,
-            isWillingToPayShipingCharges: isWillingToPayShipingCharges
-        },include: [{
-            model: User, 
-            where: { zipcode: '61001'}
-        }], include: ['listingImages']});
-    }
+    // if(zipcodeFilter.length > 0) {
+    //      console.log('ZIPCODE RUNS >>>>>>>>>>>>>>>>>>>>>>>>>>>>.', filter.zipcodes[0].zipcode)
+    //     return Listing.findAll( { where: {isActive: true, $and: filters,
+    //         isWillingToPayShipingCharges: isWillingToPayShipingCharges
+    //     },include: [{
+    //         model: User, 
+    //         where: { zipcode: '61001'}
+    //     }], include: ['listingImages']});
+    // }
     if (isWillingToPayShipingCharges !== null && isWillingToPayShipingCharges !== undefined
         && isWillingToMeet !== null && isWillingToMeet !== undefined) {
             console.log('RUN isWillingToMeet and isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>')
@@ -303,4 +303,10 @@ exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges
 exports.getAllListingForClientsBeforeLogin = () => {
     return Listing.findAll({where: {isActive: true}, include: ['listingImages']});
     // return Listing.findAll({where: {userId: user.id, isActive: true}, include: ['listingImages']});
+}
+
+// Search listing by Name 
+exports.getSearchByName = (title) => {
+    console.log("SEARCH BY NAME::::::?=======", title)
+    return Listing.findAll({where: {isActive: true, title: { $like: `%${title}%` }}, include: ['listingImages']});
 }
