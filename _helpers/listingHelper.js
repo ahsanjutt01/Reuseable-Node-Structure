@@ -258,32 +258,46 @@ exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges
             }
         });
     }
-    // if (filter.zipCodes !== null && filter.zipCodes !== undefined && filter.zipCodes.length > 0) {
-    //     filter.zipCodes.forEach(element => {
-    //         if(element !== null && element !== undefined) {
-    //             filter.push({ zipCode: {$eq: element.zipCode}});
-    //         }
-    //     });
-    // }
+    const zipcodeFilter = [];
+    if (filter.zipcodes !== null && filter.zipcodes !== undefined && filter.zipcodes.length > 0) {
+        filter.zipcodes.forEach(element => {
+            if(element !== null && element !== undefined) {
+                zipcodeFilter.push({ zipcode: {$eq: element.zipcode}});
+            }
+        });
+    }
     
     console.log('>>>>>>>>>>>>>>>>', filters);
+    console.log('>>>>>>>>>>>>>>>>ZIPCODE>>>>>>>>.', zipcodeFilter);
 
+    if(zipcodeFilter.length > 0) {
+        
+        return Listing.findAll({where: {isActive: true, $or: filters,
+            isWillingToPayShipingCharges: isWillingToPayShipingCharges,
+            include: {
+                model: Listing.users, 
+                where: {
+                  zipcode: filter.zipcodes[0].zipcode
+                }
+            }
+        }, include: ['listingImages']});
+    }
     if (isWillingToPayShipingCharges!== null && isWillingToPayShipingCharges !== undefined
         && isWillingToMeet !== null && isWillingToMeet !== undefined) {
             console.log('RUN isWillingToMeet and isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>')
-        return Listing.findAll({where: {isActive: true, $or: filter, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
+        return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
     }
 
     if (isWillingToPayShipingCharges!== null && isWillingToPayShipingCharges !== undefined) {
         console.log('RUN isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>', isWillingToPayShipingCharges)
         
-        return Listing.findAll({where: {isActive: true, $or: filter, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
+        return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
 
     }
     if (isWillingToMeet !== null && isWillingToMeet !== undefined) {
         console.log('RUN isWillingToMeet>>>>>>>>>>>>>>>>>>>>', isWillingToPayShipingCharges)
 
-        return Listing.findAll({where: {isActive: true, $or: filter, isWillingToMeet: isWillingToMeet}, include: ['listingImages']});
+        return Listing.findAll({where: {isActive: true, $or: filters, isWillingToMeet: isWillingToMeet}, include: ['listingImages']});
     }
     console.log('Only Fillters Can Run');
     return Listing.findAll({where: {isActive: true, $or: filters}, include: ['listingImages']});

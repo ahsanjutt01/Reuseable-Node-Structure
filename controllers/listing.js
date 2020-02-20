@@ -28,11 +28,11 @@ exports.getListingByCatgoriesBeforeLogin = (req, res, next) => {
     // const catagoryId = req.query.catagoryId;
     const { filters, isWillingToPayShipingCharges, isWillingToMeet } = req.body;
     console.log('CatagoryIds:.....>>>>>', filters,
-    'isWillingToPayShipingCharges======', isWillingToPayShipingCharges,
-    'isWillingToMeet===', isWillingToMeet);
+    'isWillingToPayShipingCharges======', filters.isWillingToPayShipingCharges,
+    'isWillingToMeet===', filters.isWillingToMeet);
     
     listingHelper.getListingByCatgoriesBeforeLogin(
-        filters, isWillingToPayShipingCharges, isWillingToMeet
+        filters, filters.isWillingToPayShipingCharges, filters.isWillingToMeet
         ).then(listings => {
         return res.status(200).json({listings: listings});
     });
