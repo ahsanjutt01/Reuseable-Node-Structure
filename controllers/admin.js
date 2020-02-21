@@ -273,7 +273,10 @@ exports.postupdateListing = (req, res, next) => {
         condition,
         catagoryId
     ).then( (listing) => {
-        res.status(201).json({msg: 'Updated Successfully'});
+        res.status(201).json({msg: 'Updated Successfully', listing});
+    }).catch(err => {
+        console.log(err)
+        return res.status(500).json({error: err});
     });
 }
 
