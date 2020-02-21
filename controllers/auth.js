@@ -154,7 +154,7 @@ exports.getCatagoriesAndZipCodes = (req, res, next) => {
         return getAllCatagories().then(catagories => {
             return res.status(200).json({ catagories: catagories, zipcodes: zipcodes });
         })
-    });
+    }).catch(err => console.log('getCatagoriesAndZipCodes>>>>>>>>.', err));
 }
 // ========================= Helper functions ===================================
 
@@ -202,7 +202,7 @@ const findClientUserType = async () => {
 }
 
 const getAllZipcode = async () => {
-    return await User.findAll({attributes: [Sequelize.fn('DISTINCT', Sequelize.col('zipcode')) ,'zipcode'], where: { isActive: true, zipcode: {$:null}}});
+    return await User.findAll({attributes: [Sequelize.fn('DISTINCT', Sequelize.col('zipcode')) ,'zipcode'], where: { isActive: true, zipcode: {$ne:null}}});
 }
 //get All Catagory
 const getAllCatagories = async () => {
