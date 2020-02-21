@@ -15,11 +15,12 @@ const UserType = require('./models/userType');
 const Listing = require('./models/listing');
 const ListingImage = require('./models/listingImages');
 const Catagory = require('./models/catagory');
+const Subscribe = require('./models/subscribe')
 //Routes
 const adminRoutes = require('./routes/auth/admin');
 const authData = require('./routes/auth/auth');
 const listingRoutes = require('./routes/listing');
-
+const subscribeRoutes = require('./routes/subscribe');
 
 
 
@@ -114,6 +115,7 @@ app.use((req, res, next) => {
 app.use(authData);
 app.use('/admin', adminRoutes);
 app.use('/client', listingRoutes);
+app.use('/subscribe', subscribeRoutes);
 
 //If Page not found
 app.use((req, res, next) => {
