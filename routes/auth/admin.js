@@ -37,5 +37,11 @@ router.post('/deleteAdminUser', passport.authenticate('jwt', {session: false}), 
 
 router.get('/getFilteredListing', passport.authenticate('jwt', {session: false}), adminController.getFilterListing);
 
+router.get('/getFilterCategories', passport.authenticate('jwt', {session: false}), adminController.getFilterCategories);
+
+router.get('/getFilteredAdminUsers', passport.authenticate('jwt', {session: false}), adminController.getFilteredAdminUsers);
+
+router.get('/getFilteredUsers', passport.authenticate('jwt', {session: false}), adminController.getFilteredUsers);
+
 module.exports = router;
 
