@@ -17,5 +17,32 @@ exports.sendEmail = (to, subject, html) => {
     return true;
 }
 
+// Authorization Is Admin
 
+exports.isAdmin = (req, res, next) => {
+
+    const user = req.jwtOptions.user;
+    // console.log(user);
+    // return res.status(401).json({msg: 'you are not admin user', user});
+
+    if(user.userType.title.toLowerCase() === 'admin') {
+        next();
+    }
+    else {
+        return res.status(401).json({msg: 'You are not an admin user'});
+    }
+}
+
+// Authorization Is Client
+
+exports.isClient = (req, res, next) => {
+
+    const user = req.jwtOptions.user;
+    if(user.userType.title.toLowerCase() === 'client') {
+        next();
+    }
+    else {
+        return res.status(401).json({msg: 'User not found'});
+    }
+}
 

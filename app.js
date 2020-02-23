@@ -51,7 +51,7 @@ jwtOptions.secretOrKey = 'wowwow';
 // lets create our strategy for web token
 let strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
     console.log('payload received', jwt_payload);
-    User.findByPk(jwt_payload.id)
+    User.findOne( {where: {id: jwt_payload.id, isActive: true}, include: [{model: UserType}]})
     .then(user => {
         if (user) {
             jwtOptions.user = user;
