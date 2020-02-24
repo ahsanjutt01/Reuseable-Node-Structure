@@ -214,7 +214,7 @@ exports.getClientProfile = (req, res, next) => {
 
     return res.status(200).json({
         userProfile: {
-        firstName: user.firstName, lastName: user.lastName, email: user.email, zipcode: user.zipCode
+        firstName: user.firstName, lastName: user.lastName, email: user.email, zipCode: user.zipCode
         }
     });
 }
