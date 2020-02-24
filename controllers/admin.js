@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const becrypt = require('bcryptjs');
+const { validationResult } = require('express-validator/check');
 
 const User = require('../models/user');
 const Role = require('../models/role');
@@ -42,6 +43,11 @@ exports.updateUser = (req, res, next) => {
 
 exports.postSignup = (req, res, next) => {
     const { firstName, lastName, email, password, isAgreeTerms, zipCode} = req.body;
+
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+    }
     // console.log(firstName + ' ' + lastName + ' ' + email + ' ' + password);
     getUser({email: email}).then(user => {
         if(!user) {
@@ -67,11 +73,11 @@ exports.postSignup = (req, res, next) => {
             return res.status(201).json({msg: 'successfulll login.', result: result});
         })
         } else {
-            res.status(500).send('Email already exists... ' + email);
+            res.status(500).json('Email already exists... ' + email);
         }
     })
     .catch(err => {
-        res.status(501).send('Error ' + err);
+        res.status(501).json('Error ' + err);
     });
 }
 
@@ -550,8 +556,10 @@ exports.postListing = (req, res, next) => {
         condition,
         imageUrls,
         catagoryId
-    ).then( () => {
-        res.status(201).json({msg: 'Added Successfully'});
+    ).then( ( listing) => {
+        res.status(201).json({msg: 'Listing Added Successfully', listing: listing});
+    }).catch(err => {
+        res.status(201).json({msg: 'Error', error: err});
     });
 }
 
@@ -614,7 +622,10 @@ exports.postupdateListing = (req, res, next) => {
         condition,
         catagoryId
     ).then( (listing) => {
-        res.status(201).json({msg: 'Updated Successfully'});
+        res.status(201).json({msg: 'Updated Successfully', listing});
+    }).catch(err => {
+        console.log(err)
+        return res.status(500).json({error: err});
     });
 }
 
@@ -647,7 +658,7 @@ const getUser = async obj => {
 // Get all ADMIN Users
 const getAllAdminUsers = async () => {
     return await findAdminUserType().then(type => {
-        return User.findAll({where: {isActive: true, userTypeId: type.id}});
+        return User.findAll({ attributes: ['id', 'email'], where: {isActive: true, userTypeId: type.id}});
     }) 
 };
 

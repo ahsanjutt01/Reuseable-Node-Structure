@@ -1,5 +1,6 @@
 
 const listingHelper = require('../_helpers/listingHelper');
+const ListingImage = require('../models/listingImages');
 
 exports.getMyListing = (req, res, next) => {
     const user = req.jwtOptions.user;
@@ -26,7 +27,7 @@ exports.getListingByCatgories = (req, res, next) => {
 exports.getListingByCatgoriesBeforeLogin = (req, res, next) => {
     // const user = req.jwtOptions.user;
     // const catagoryId = req.query.catagoryId;
-    const { filters, isWillingToPayShipingCharges, isWillingToMeet } = req.body;
+    const { filters } = req.body;
     console.log('CatagoryIds:.....>>>>>', filters,
     'isWillingToPayShipingCharges======', filters.isWillingToPayShipingCharges,
     'isWillingToMeet===', filters.isWillingToMeet);
@@ -42,4 +43,13 @@ exports.getAllListingForClientsBeforeLogin = (req, res, next) => {
     listingHelper.getAllListingForClientsBeforeLogin().then(listings => {
         return res.status(200).json({listings: listings});
     });
+}
+
+exports.getSearchByName = (req, res, next) => {
+    const { title } = req.query;
+
+    listingHelper.getSearchByName(title).then( listings => {
+        return res.status(200).json({listings: listings});
+    }).catch(err => res.status(200).json({error: err}));
+    
 }

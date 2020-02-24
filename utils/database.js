@@ -7,7 +7,9 @@ const operatorsAliases = {
   $any: Op.any,
   $all: Op.all,
   $values: Op.values,
-  $col: Op.col
+  $col: Op.col,
+  $and: Op.and,
+  $like: Op.like,
 };
 
 

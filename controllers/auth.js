@@ -1,10 +1,12 @@
 const jwt = require('jsonwebtoken');
 const becrypt = require('bcryptjs');
+const Sequelize = require('sequelize');
 
 const User = require('../models/user');
 const Role = require('../models/role');
 const UserRole = require('../models/user-role');
 const UserType = require('../models/userType');
+const Catagory = require('../models/catagory');
 
 "use strict"
 
@@ -146,6 +148,14 @@ exports.postResetPassword = (req, res, next) => {
     });
 
 }
+
+exports.getCatagoriesAndZipCodes = (req, res, next) => {
+    getAllZipcode().then(zipcodes => {
+        return getAllCatagories().then(catagories => {
+            return res.status(200).json({ catagories: catagories, zipcodes: zipcodes });
+        })
+    }).catch(err => console.log('getCatagoriesAndZipCodes>>>>>>>>.', err));
+}
 // ========================= Helper functions ===================================
 
 
@@ -191,3 +201,10 @@ const findClientUserType = async () => {
     return await UserType.findOne({where: {title: 'client'}});
 }
 
+const getAllZipcode = async () => {
+    return await User.findAll({attributes: [Sequelize.fn('DISTINCT', Sequelize.col('zipcode')) ,'zipcode'], where: { isActive: true, zipcode: {$ne:null}}});
+}
+//get All Catagory
+const getAllCatagories = async () => {
+    return await Catagory.findAll({where: {isActive: true}});
+}

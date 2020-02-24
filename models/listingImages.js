@@ -14,6 +14,7 @@ const ListingImage =  sequelize.define('listingImages', {
         type: Sequelize.STRING,
         allowNull: false
     },
+    isMarkAsDefault: Sequelize.BOOLEAN,
     isActive: Sequelize.BOOLEAN
 });
 

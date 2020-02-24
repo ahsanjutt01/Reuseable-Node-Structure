@@ -3,6 +3,7 @@ const { Op } = require("sequelize");
 
 const Listing = require('../models/listing');
 const User = require('../models/user');
+const ListingImage = require('../models/listingImages');
 
 exports.createListing = (
     user,
@@ -35,7 +36,7 @@ exports.createListing = (
     }).then( listing => {
         if(imageUrls.length > 0) {
             imageUrls.forEach(element => {
-                listing.createListingImage({url: element.url, isActive: true});
+                listing.createListingImage({url: element.url, isActive: true, isMarkAsDefault: true});
             });
         }
             return listing;
@@ -205,19 +206,16 @@ exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges
     console.log('>>>>>>>>>>>>>>>>', filters);
     console.log('>>>>>>>>>>>>>>>>ZIPCODE>>>>>>>>.', zipcodeFilter);
 
-    if(zipcodeFilter.length > 0) {
-        
-        return Listing.findAll({where: {isActive: true, $or: filters,
-            isWillingToPayShipingCharges: isWillingToPayShipingCharges,
-            include: {
-                model: Listing.users, 
-                where: {
-                  zipcode: filter.zipcodes[0].zipcode
-                }
-            }
-        }, include: ['listingImages']});
-    }
-    if (isWillingToPayShipingCharges!== null && isWillingToPayShipingCharges !== undefined
+    // if(zipcodeFilter.length > 0) {
+    //      console.log('ZIPCODE RUNS >>>>>>>>>>>>>>>>>>>>>>>>>>>>.', filter.zipcodes[0].zipcode)
+    //     return Listing.findAll( { where: {isActive: true, $and: filters,
+    //         isWillingToPayShipingCharges: isWillingToPayShipingCharges
+    //     },include: [{
+    //         model: User, 
+    //         where: { zipcode: '61001'}
+    //     }], include: ['listingImages']});
+    // }
+    if (isWillingToPayShipingCharges !== null && isWillingToPayShipingCharges !== undefined
         && isWillingToMeet !== null && isWillingToMeet !== undefined) {
             console.log('RUN isWillingToMeet and isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>')
         return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
@@ -241,4 +239,71 @@ exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges
 exports.getAllListingForClientsBeforeLogin = () => {
     return Listing.findAll({where: {isActive: true}, include: ['listingImages']});
     // return Listing.findAll({where: {userId: user.id, isActive: true}, include: ['listingImages']});
+}
+
+// Search listing by Name 
+exports.getSearchByName = (title) => {
+    console.log("SEARCH BY NAME::::::?=======", title)
+    return Listing.findAll({where: {isActive: true, title: { $like: `%${title}%` }}, include: ['listingImages']});
+}
+
+
+//Mark as default Image
+exports.postMarkListingImageDefault = (req, res, next) => {
+    const { imageId, listingId } = req.body;
+
+    ListingImage.findOne({where: {isActive: true, isMarkAsDefault: true, listingId: listingId}})
+    .then(listing => {
+        if(listing) {
+            listing.isMarkAsDefault = false;
+            return listing.save();
+        }
+    })
+    .then(() => {
+        return ListingImage.findByPk(imageId).then(listing => {
+            if(listing) {
+                listing.isMarkAsDefault = true;
+                return listing.save();
+            } else {
+                return res.status(404).json({notFound: 'we can not find image against this Id', imageId});
+            }
+        })
+    }).then(() => {
+        return res.status(200).json({msg: 'Mark as default successfully'});
+    }).catch(err => {
+        return res.status(500).json({error: 'Error in mark as default.', err});
+    });
+}
+
+exports.postDeleteLisitngImage = (req, res, next) => {
+    const { imageId }= req.body;
+    ListingImage.findByPk(imageId).then(listing => {
+        if(!listing.isMarkAsDefault) {
+            listing.distroy({where: {id: imageId}});
+            return res.status(200).json({msg: 'deleted successfully..!'});
+        } else {
+            return res.status(500).json({msg: 'default image is not deleted..! mark another is default the delete this image'});
+        }
+    }).then(err => {
+        res.status(500).json({error: 'error in deleteing listing image...!', err});
+    });
+}
+
+exports.postUploadlistingImage = (req, res, next) => {
+    const  file = req.file;
+    const {listingId} = req.body;
+    console.log('request>>>>>>>>>>>>>>>>>>>>>>>>>>>', file);
+
+    console.log('RUNING==============>',file.path, listingId);
+    ListingImage.create({
+        url: file.path,
+        isActive: true,
+        isMarkAsDefault: false,
+        listingId: listingId
+    }).then( listing => {
+        return res.status(201).json({msg: 'Image save successfully'})
+    }).catch(err => {
+        return res.status(500).json({error: 'error in saving image...!', err});
+    })
+
 }
