@@ -15,10 +15,10 @@ router.post('/updateUser', passport.authenticate('jwt', {session: false}), helpe
 router.post('/signup', check('email').isEmail()
 .withMessage('please enter a valid email')
 .normalizeEmail(),
-body('password', 'please enter a password with only numbers and text and at lest 8 characters.')
-.isLength({min: 8})
-.isAlphanumeric()
-.trim(),
+// body('password', 'please enter a password with only numbers and text and at lest 8 characters.')
+// .isLength({min: 8})
+// .isAlphanumeric()
+// .trim(),
 adminController.postSignup);
 
 router.get('/getAdminUsers', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getAdminUsers);
