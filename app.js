@@ -147,6 +147,11 @@ sequelize
 .then( result => {
     // console.log(result);
     console.log('Connection has been established successfully port 3200.');
-    app.listen(process.env.PORT || 3200);
+    const server = app.listen(process.env.PORT || 3200);
+
+    const io = require('./socket').init(server);
+    io.on('connection', socket => {
+      console.log('clientConnected');
+    });
 })
 .catch( err => console.log(err));
