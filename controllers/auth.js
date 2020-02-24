@@ -46,7 +46,7 @@ exports.postLogin = (req, res, next) => {
 // Post Signup
 exports.postSignup = (req, res, next) => {
     const { firstName, lastName, email, password, isAgreeTerms, zipCode} = req.body;
-    
+
     // console.log(firstName + ' ' + lastName + ' ' + email + ' ' + password);
     getUser({email: email}).then(user => {
         if(!user) {
@@ -212,7 +212,7 @@ const getAllCatagories = async () => {
 
 exports.getClientProfile = (req, res, next) => {
     const user = req.jwtOptions.user;
-
+    console.log(user);
     return res.status(200).json({
         userProfile: {
         firstName: user.firstName, lastName: user.lastName, email: user.email, zipCode: user.zipCode == null ? '' : user.zipCode
