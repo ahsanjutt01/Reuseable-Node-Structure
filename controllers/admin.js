@@ -46,7 +46,7 @@ exports.postSignup = (req, res, next) => {
 
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
-        return res.status(422).json(errors.array());
+        return res.status(422).json({errors: errors.array()});
     }
     // console.log(firstName + ' ' + lastName + ' ' + email + ' ' + password);
     getUser({email: email}).then(user => {
