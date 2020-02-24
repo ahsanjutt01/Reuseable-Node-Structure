@@ -42,14 +42,14 @@ exports.updateUser = (req, res, next) => {
 // Post Signup
 
 exports.postSignup = (req, res, next) => {
-    const { firstName, lastName, email, password, isAgreeTerms, zipCode} = req.body;
+    let { firstName, lastName, email, password, isAgreeTerms, zipCode} = req.body;
 
     if(password=== null || password === undefined ) {
-        password = admin123;
+        password = 'admin123';
     }
     if(firstName == null || firstName === undefined ) {
-        firstName = abc;
-        lastName = abc;
+        firstName = 'abc';
+        lastName = 'abc';
     }
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
