@@ -13,9 +13,9 @@ const router = express.Router();
 router.post('/updateUser', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.updateUser);
 
 router.post('/signup', 
-// check('email').isEmail()
-// .withMessage('please enter a valid email')
-// .normalizeEmail(),
+check('email').isEmail()
+.withMessage('please enter a valid email')
+.normalizeEmail(),
 // body('password', 'please enter a password with only numbers and text and at lest 8 characters.')
 // .isLength({min: 8})
 // .isAlphanumeric()
