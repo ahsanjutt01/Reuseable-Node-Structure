@@ -29,6 +29,13 @@ const app = express();
 
 app.use(cookieParser());
 
+app.use( (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
 // ExtractJwt to help extract the token
 let ExtractJwt = passportJWT.ExtractJwt;
 
@@ -97,13 +104,6 @@ app.use(bodyparser.urlencoded({ extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-
-app.use( (req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
 
 app.use((req, res, next) => {
     req.jwtOptions = jwtOptions;
