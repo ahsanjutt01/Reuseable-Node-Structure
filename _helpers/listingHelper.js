@@ -307,3 +307,22 @@ exports.postUploadlistingImage = (req, res, next) => {
     })
 
 }
+
+
+exports.postDeleteLisitng = (req, res, next) => {
+    
+    const { deleteReason, listingId } = req.body;
+    const user = req.jwtOptions.user;
+
+    Listing.findOne({where: {id: listingId, isActive: true, userId: user.id}})
+    .then(listing => {
+        listing.isActive = false;
+        listing.isActiveListing = false;
+        listing.deleteReason = deleteReason;
+        return listing.save();
+    }).then(listing => {
+        return res.status(200).json({msg: 'delete lisitng successfully'})
+    }).catch(err => {
+        return res.status(500).json({errors: ' error in delete lisitng', errors});
+    })
+}

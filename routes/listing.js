@@ -34,6 +34,8 @@ router.post('/postListingImage', passport.authenticate('jwt', {session: false}),
 
 router.post('/updateListing', passport.authenticate('jwt', {session: false}), helper.isClient, adminController.postupdateListing);
 
+router.post('/deleteListing', passport.authenticate('jwt', {session: false}), helper.isClient, listinghelper.postDeleteLisitng);
+
 router.get('/getOneListing', passport.authenticate('jwt', {session: false}), helper.isClient, adminController.getOneListing);
 
 router.post('/updateUser', passport.authenticate('jwt', {session: false}), helper.isClient, adminController.updateUser);

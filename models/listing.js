@@ -23,7 +23,8 @@ const Listing =  sequelize.define('listings', {
     state: Sequelize.STRING,
     isActiveListing: Sequelize.BOOLEAN,
     condition: Sequelize.STRING,
-    isActive: Sequelize.BOOLEAN
+    isActive: Sequelize.BOOLEAN,
+    deleteReason: Sequelize.STRING
 });
 
 module.exports = Listing;
