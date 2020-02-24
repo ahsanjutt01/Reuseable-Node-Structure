@@ -14,7 +14,7 @@ exports.postSubscribe = (req, res, next) => {
     subObj.save().then(response => {
         return res.status(200).json({message: "subscription added successfully", hasErrors: false});
     }).catch(error => {
-        return res.status(500).json({message: "subscription failed", hasErrors: true});
+        return res.status(500).json({message: "subscription failed", error: error ,hasErrors: true});
     })
 }
 //get all subscribers
@@ -23,6 +23,6 @@ exports.getAllSubscribers = (req, res, next) => {
     Subscribe.findAll({where: {isActive: true}}).then(response => {
         return res.status(200).json({subscribers: response, message: "fetched successfully", hasErrors: false});
     }).catch(error => {
-       return res.status(200).json({subscribers: response, message: "fetching failed", hasErrors: false});
+       return res.status(500).json({message: "fetching failed", error: error ,hasErrors: false});
     })
 }
