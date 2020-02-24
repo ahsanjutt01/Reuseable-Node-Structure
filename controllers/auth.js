@@ -67,7 +67,7 @@ exports.postSignup = (req, res, next) => {
                 return userObj.save();
             });
         }).then(result => {
-            return res.status(201).json({msg: 'successfulll login.', result: result});
+            return res.status(201).json({msg: 'signup successfully.'});
         })
         } else {
             res.status(500).send('Email already exists... ' + email);
