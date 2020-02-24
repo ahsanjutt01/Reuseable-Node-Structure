@@ -208,3 +208,13 @@ const getAllZipcode = async () => {
 const getAllCatagories = async () => {
     return await Catagory.findAll({where: {isActive: true}});
 }
+
+exports.getClientProfile = (req, res, next) => {
+    const user = req.jwtOptions.user;
+
+    return res.status(200).json({
+        userProfile: {
+        firstName: user.firstName, lastName: user.lastName, email: user.email, zipcode: user.zipCode
+        }
+    });
+}

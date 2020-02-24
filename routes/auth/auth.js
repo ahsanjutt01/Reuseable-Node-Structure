@@ -25,4 +25,6 @@ router.post('/addRole', passport.authenticate('jwt', {session: false}), authCont
 
 router.post('/resetPassword', passport.authenticate('jwt', {session: false}), authController.postResetPassword);
 
+router.post('/getClientProfile', passport.authenticate('jwt', {session: false}), authController.getClientProfile);
+
 module.exports = router;

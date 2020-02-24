@@ -76,8 +76,10 @@ exports.postSignup = (req, res, next) => {
                 return userObj.save();
             });
         }).then(result => {
-            helper.sendEmail(email, 'Signup Successfull', `<h1> Wellcome ${firstName} ${lastName} to littlewins.`);
-            return res.status(201).json({msg: 'successfulll login.', result: result});
+            if(firstName !== null || firstName !== undefined) {
+                helper.sendEmail(email, 'Signup Successfull', `<h1> Wellcome ${firstName} ${lastName} to littlewins.`);
+            }
+            return res.status(201).json({ msg: 'successfulll signup.' });
         })
         } else {
             res.status(500).json('Email already exists... ' + email);
