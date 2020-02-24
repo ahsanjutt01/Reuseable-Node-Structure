@@ -22,6 +22,16 @@ check('email').isEmail()
 // .trim(),
 adminController.postSignup);
 
+router.post('/postClient', 
+check('email').isEmail()
+.withMessage('please enter a valid email')
+.normalizeEmail(),
+// body('password', 'please enter a password with only numbers and text and at lest 8 characters.')
+// .isLength({min: 8})
+// .isAlphanumeric()
+// .trim(),
+adminController.postClient);
+
 router.get('/getAdminUsers', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getAdminUsers);
 
 router.get('/getClientUsers', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getClientUsers);
