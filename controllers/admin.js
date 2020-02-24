@@ -550,7 +550,7 @@ exports.getFilterCategories = (req,res,next) => {
 exports.postListing = (req, res, next) => {
     const {
         title, description, isFree, price, date, isWillingToPayShipingCharges,
-        isWillingToMeet, state, isActiveListing, condition, catagoryId
+        isWillingToMeet, state, isActiveListing, condition, catagoryId, userId
     } = req.body;
     
     const images = req.file;
@@ -561,7 +561,7 @@ exports.postListing = (req, res, next) => {
     const imageUrls = [{ url: images.path}];
     const user = req.jwtOptions.user;
 
-    ListingHelper.createListing(
+    ListingHelper.adminCreateListing(
         user,
         title,
         description,
@@ -574,7 +574,8 @@ exports.postListing = (req, res, next) => {
         isActiveListing,
         condition,
         imageUrls,
-        catagoryId
+        catagoryId,
+        userId
     ).then( ( listing) => {
         res.status(201).json({msg: 'Listing Added Successfully', listing: listing});
     }).catch(err => {

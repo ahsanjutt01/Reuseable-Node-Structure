@@ -42,11 +42,50 @@ exports.createListing = (
             return listing;
     }).catch(err => console.log('ERROR ================== ',err));
 }
+exports.adminCreateListing = (
+    user,
+    title,
+    desciption,
+    isFree,
+    price,
+    date,
+    isWillingToPayShipingCharges,
+    isWillingToMeet,
+    state,
+    isActiveListing,
+    condition,
+    imageUrls,
+    catagoryId,
+    userId
+) => {
+    return Listing.create({
+        title: title,
+        desciption: desciption,
+        isFree: isFree,
+        price: price,
+        date: date,
+        isWillingToPayShipingCharges: isWillingToPayShipingCharges,
+        isWillingToMeet: isWillingToMeet,
+        state: state,
+        isActiveListing: isActiveListing,
+        condition: condition,
+        catagoryId: catagoryId,
+        isActive: true,
+        userId: userId
+    }).then( listing => {
+        if(imageUrls.length > 0) {
+            imageUrls.forEach(element => {
+                listing.createListingImage({url: element.url, isActive: true, isMarkAsDefault: true});
+            });
+        }
+            return listing;
+    }).catch(err => console.log('ERROR ================== ',err));
+}
 
 exports.updateListing  = (
     id,
     title,
-    desciption,
+    description,
     isFree,
     price,
     date,
@@ -59,7 +98,7 @@ exports.updateListing  = (
 ) => {
     return Listing.findOne({where: {id: id, isActive: true}}).then(listing => {
         listing.title = title;
-        listing.description = desciption;
+        listing.description = description;
         listing.isFree = isFree;
         listing.price = price;
         listing.date = listing.date;
