@@ -34,4 +34,16 @@ router.post('/updateListing', passport.authenticate('jwt', {session: false}), he
 
 router.get('/getOneListing', passport.authenticate('jwt', {session: false}), helper.isClient, adminController.getOneListing);
 
+router.post('/updateUser', passport.authenticate('jwt', {session: false}), helper.isClient, adminController.updateUser);
+
+router.post('/updateProfile', check('email').isEmail()
+.withMessage('please enter a valid email')
+.normalizeEmail(),
+// body('firstName', 'please enter the first Name')
+// body('password', 'please enter a password with only numbers and text and at lest 8 characters.')
+// .isLength({min: 8})
+// .isAlphanumeric()
+// .trim(),
+listingController.updateUser);
+
 module.exports = router;

@@ -53,3 +53,24 @@ exports.getSearchByName = (req, res, next) => {
     }).catch(err => res.status(200).json({error: err}));
     
 }
+
+
+// update user
+
+exports.updateUser = (req, res, next) => {
+    const user = req.jwtOptions.user;
+    const { firstName, lastName, email, zipCode } = req.body;
+
+    user.email = email;
+    user.firstName = firstName; 
+    user.lastName = lastName;
+    user.zipCode = zipCode;
+
+    user.save().then(() => {
+        return res.status(200).json({msg: 'user profile is updated successfully'});
+    }).catch(err => {
+        return res.status(500).json({errors: 'E rror in user profile updating ', err});
+        
+    })
+
+}
