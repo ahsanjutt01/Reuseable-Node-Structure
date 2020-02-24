@@ -91,6 +91,58 @@ exports.postSignup = (req, res, next) => {
 }
 
 
+// Post client 
+
+exports.postClient = (req, res, next) => {
+    let { firstName, lastName, email, password, isAgreeTerms, zipCode} = req.body;
+
+    if(password=== null || password === undefined ) {
+        password = 'admin123';
+    }
+    if(firstName == null || firstName === undefined ) {
+        firstName = 'abc';
+        lastName = 'abc';
+    }
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+    }
+    // console.log(firstName + ' ' + lastName + ' ' + email + ' ' + password);
+    getUser({email: email}).then(user => {
+        if(!user) {
+            becrypt.hash(password, 12)
+        .then( hashedPassword => {
+            let userTypeId;
+            return findClientUserType().then(type => {
+                userTypeId = type.id;
+                const userObj = new User({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: hashedPassword,
+                    isAgreeTerms: true,
+                    userTypeId: userTypeId,
+                    isActive: true,
+                    zipCode: zipCode
+                });
+                return userObj.save();
+            });
+        }).then(result => {
+            if(firstName !== null || firstName !== undefined) {
+                helper.sendEmail(email, 'Signup Successfull', `<h1> Wellcome ${firstName} ${lastName} to littlewins.`);
+            }
+            return res.status(201).json({ msg: 'successfulll signup.' });
+        })
+        } else {
+            res.status(500).json('Email already exists... ' + email);
+        }
+    })
+    .catch(err => {
+        res.status(501).json('Error ' + err);
+    });
+}
+
+
 //Reset Password
 
 exports.postResetPassword = (req, res, next) => {
