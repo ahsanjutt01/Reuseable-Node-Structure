@@ -30,4 +30,8 @@ router.post('/deleteListingImage', passport.authenticate('jwt', {session: false}
 
 router.post('/postListingImage', passport.authenticate('jwt', {session: false}), helper.isClient, listinghelper.postUploadlistingImage);
 
+router.post('/updateListing', passport.authenticate('jwt', {session: false}), helper.isClient, adminController.postupdateListing);
+
+router.get('/getOneListing', passport.authenticate('jwt', {session: false}), helper.isClient, adminController.getOneListing);
+
 module.exports = router;
