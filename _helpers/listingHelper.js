@@ -314,15 +314,24 @@ exports.postDeleteLisitng = (req, res, next) => {
     const { deleteReason, listingId } = req.body;
     const user = req.jwtOptions.user;
 
+    console.log('====================', deleteReason, listingId, user.id)
+
     Listing.findOne({where: {id: listingId, isActive: true, userId: user.id}})
     .then(listing => {
+        if(!listing) {
+        return false;
+
+        }
         listing.isActive = false;
         listing.isActiveListing = false;
         listing.deleteReason = deleteReason;
         return listing.save();
     }).then(listing => {
+        if(!listing) {
+            return res.status(404).json({errors: 'lisitng not found'});
+        }
         return res.status(200).json({msg: 'delete lisitng successfully'})
     }).catch(err => {
-        return res.status(500).json({errors: ' error in delete lisitng', errors});
+        return res.status(500).json({errors: ' error in delete lisitng===' + err});
     })
 }
