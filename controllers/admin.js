@@ -8,7 +8,7 @@ const UserRole = require('../models/user-role');
 const UserType = require('../models/userType');
 const Catagory = require('../models/catagory');
 const ListingHelper = require('../_helpers/listingHelper');
-
+const Listing = require('../models/listing')
 const helper = require('../_helpers/helper');
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
@@ -524,9 +524,26 @@ exports.getFilteredUsers = (req, res, next) => {
 // Get users count
 exports.getUsersCount = (req, res, next) => {
     User.count({where: {isActive: true}}).then(response => {
-        res.status(200).json({totalUsers: response, hasErrors: false});
+        res.status(200).json({total: response, hasErrors: false});
     }).catch(error => {
-        res.status(500).json({totalUsers: response ,error: error, hasErrors: true});
+        res.status(500).json({total: response ,error: error, hasErrors: true});
+    })
+}
+
+//Get lists count
+exports.getListsCount = (req, res, next) => {
+    Listing.count({where: {isActive: true}}).then(response => {
+        res.status(200).json({total: response, hasErrors: false});
+    }).catch(error => {
+        res.status(500).json({total: response ,error: error, hasErrors: true});
+    })
+}
+//Get user active lists count
+exports.getUserActiveListsCount = (req, res, next) => {
+    User.count({distinct: 'id', where: {isActive: true}, include:({model: Listing, where: {isActive: true}})}).then(response => {
+        res.status(200).json({total: response, hasErrors: false});
+    }).catch(error => {
+        res.status(500).json({total: response ,error: error, hasErrors: true});
     })
 }
 //================================= END USER MIDDLEWARE ====================================

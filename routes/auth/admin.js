@@ -71,5 +71,10 @@ router.post('/deleteListingImage', passport.authenticate('jwt', {session: false}
 router.post('/postListingImage', passport.authenticate('jwt', {session: false}),  helper.isAdmin,listinghelper.postUploadlistingImage);
 
 router.get('/getUsersCount', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getUsersCount);
+
+router.get('/getListsCount', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getListsCount);
+
+router.get('/getUserActiveListsCount', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getUserActiveListsCount);
+
 module.exports = router;
 
