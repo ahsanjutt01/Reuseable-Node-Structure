@@ -520,6 +520,15 @@ exports.getFilteredUsers = (req, res, next) => {
         })
     }
 }
+
+// Get users count
+exports.getUsersCount = (req, res, next) => {
+    User.count({where: {isActive: true}}).then(response => {
+        res.status(200).json({totalUsers: response, hasErrors: false});
+    }).catch(error => {
+        res.status(500).json({totalUsers: response ,error: error, hasErrors: true});
+    })
+}
 //================================= END USER MIDDLEWARE ====================================
 
 

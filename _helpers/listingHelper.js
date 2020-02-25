@@ -18,7 +18,8 @@ exports.createListing = (
     isActiveListing,
     condition,
     imageUrls,
-    catagoryId
+    catagoryId,
+    userId
 ) => {
     return user.createListing({
         title: title,
@@ -32,7 +33,8 @@ exports.createListing = (
         isActiveListing: isActiveListing,
         condition: condition,
         catagoryId: catagoryId,
-        isActive: true
+        isActive: true,
+        userId: userId
     }).then( listing => {
         if(imageUrls.length > 0) {
             imageUrls.forEach(element => {
@@ -45,7 +47,7 @@ exports.createListing = (
 exports.adminCreateListing = (
     user,
     title,
-    desciption,
+    description,
     isFree,
     price,
     date,
@@ -58,9 +60,9 @@ exports.adminCreateListing = (
     catagoryId,
     userId
 ) => {
-    return Listing.create({
+    return user.createListing({
         title: title,
-        desciption: desciption,
+        description: description,
         isFree: isFree,
         price: price,
         date: date,
