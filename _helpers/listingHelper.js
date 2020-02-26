@@ -191,7 +191,7 @@ exports.checkFilterType = (value,filterType) => {
         case "equals": {
             return value;
         }
-        case "starts with": {
+        case "startswith": {
             return value + '%';
         }
         case "endswith": {
