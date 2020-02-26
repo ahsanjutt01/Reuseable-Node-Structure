@@ -27,13 +27,27 @@ exports.getListingByCatgories = (req, res, next) => {
 exports.getListingByCatgoriesBeforeLogin = (req, res, next) => {
     // const user = req.jwtOptions.user;
     // const catagoryId = req.query.catagoryId;
-    const { filters } = req.body;
-    console.log('CatagoryIds:.....>>>>>', filters,
+    var { filters } = req.body;
+    const sort = req.query.sort;
+    var isWillingToPayShipingCharges = null;
+    var isWillingToMeet = null;
+    console.log('hello',filters);
+    if(filters != null && filters != undefined) {
+        console.log('undefined');
+        console.log('CatagoryIds:.....>>>>>', filters,
     'isWillingToPayShipingCharges======', filters.isWillingToPayShipingCharges,
     'isWillingToMeet===', filters.isWillingToMeet);
+    isWillingToPayShipingCharges = filters.isWillingToPayShipingCharges;
+    isWillingToMeet = filters.isWillingToMeet;
+        
+    } else {
+        console.log("here");
+        filters = [];
+    }
+    
     
     listingHelper.getListingByCatgoriesBeforeLogin(
-        filters, filters.isWillingToPayShipingCharges, filters.isWillingToMeet
+        filters, isWillingToPayShipingCharges, isWillingToMeet,sort
         ).then(listings => {
         return res.status(200).json({listings: listings});
     });

@@ -221,7 +221,7 @@ exports.getListingByCatgories = (user, catagoryId) => {
     }).catch(err => console.log('Error in helper methord getListingByCatgories', err))
 }
 
-exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges, isWillingToMeet) => {
+exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges, isWillingToMeet,sort) => {
     // return Listing.findAll({where: {isActive: true}, include: ['listingImages']}).then(listing => {
     //     listing = listing.filter(x => (x.catagoryId == catagoryId && x.catagoryId !== null));
     //     return listing;
@@ -256,25 +256,67 @@ exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges
     //         where: { zipcode: '61001'}
     //     }], include: ['listingImages']});
     // }
-    if (isWillingToPayShipingCharges !== null && isWillingToPayShipingCharges !== undefined
-        && isWillingToMeet !== null && isWillingToMeet !== undefined) {
-            console.log('RUN isWillingToMeet and isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>')
-        return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
+    if(filter.length > 0) {
+        if (isWillingToPayShipingCharges !== null && isWillingToPayShipingCharges !== undefined
+            && isWillingToMeet !== null && isWillingToMeet !== undefined) {
+                console.log('RUN isWillingToMeet and isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>')
+                if(sort === "newest") {
+                    return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, order: [['createdAt', 'DESC']], include: ['listingImages']});
+                } else if (sort === "oldest") {
+                    return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, order: [['createdAt']], include: ['listingImages']});
+                } else if (sort === "highestPrice") {
+                    return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, order: [['price', 'DESC']], include: ['listingImages']});
+                } else if (sort == "lowestPrice") {
+                    return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, order: [['price']], include: ['listingImages']});
+                } else {
+                    return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
+                }
+        }
+    
+        if (isWillingToPayShipingCharges!== null && isWillingToPayShipingCharges !== undefined) {
+            console.log('RUN isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>', isWillingToPayShipingCharges)
+            if(sort === "newest") {
+                return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, order: [['createdAt', 'DESC']], include: ['listingImages']});
+            } else if (sort === "oldest") {
+                return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, order: [['createdAt']], include: ['listingImages']});
+            } else if (sort === "highestPrice") {
+                return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, order: [['price', 'DESC']], include: ['listingImages']});
+            } else if (sort == "lowestPrice") {
+                return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, order: [['price']], include: ['listingImages']});
+            } else {
+                return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
+            }
+        }
+        if (isWillingToMeet !== null && isWillingToMeet !== undefined) {
+            console.log('RUN isWillingToMeet>>>>>>>>>>>>>>>>>>>>', isWillingToPayShipingCharges)
+            if(sort === "newest") {
+                return Listing.findAll({where: {isActive: true, $or: filters, isWillingToMeet: isWillingToMeet}, order: [['createdAt', 'DESC']], include: ['listingImages']});
+            } else if (sort === "oldest") {
+                return Listing.findAll({where: {isActive: true, $or: filters, isWillingToMeet: isWillingToMeet}, order: [['createdAt']], include: ['listingImages']});
+            } else if (sort === "highestPrice") {
+                return Listing.findAll({where: {isActive: true, $or: filters, isWillingToMeet: isWillingToMeet}, order: [['price', 'DESC']], include: ['listingImages']});
+            } else if (sort == "lowestPrice") {
+                return Listing.findAll({where: {isActive: true, $or: filters, isWillingToMeet: isWillingToMeet}, order: [['price']], include: ['listingImages']});
+            } else {
+                return Listing.findAll({where: {isActive: true, $or: filters, isWillingToMeet: isWillingToMeet}, include: ['listingImages']});
+            }
+        }
+    } else {
+        console.log('Only Fillters Can Run');
+        if(sort === "newest") {
+            return Listing.findAll({where: {isActive: true},order: [['createdAt', 'DESC']], include: ['listingImages']});
+        } else if (sort === "oldest") {
+            return Listing.findAll({where: {isActive: true},order: [['createdAt']], include: ['listingImages']});
+        } else if (sort === "highestPrice") {
+            return Listing.findAll({where: {isActive: true}, order: [['price', 'DESC']], include: ['listingImages']});
+        } else if (sort == "lowestPrice") {
+            return Listing.findAll({where: {isActive: true}, order: [['price']], include: ['listingImages']});
+        } else {
+            console.log('asd');
+            return Listing.findAll({where: {isActive: true}, include: ['listingImages']});
+        }
     }
-
-    if (isWillingToPayShipingCharges!== null && isWillingToPayShipingCharges !== undefined) {
-        console.log('RUN isWillingToPayShipingCharges>>>>>>>>>>>>>>>>>>>>', isWillingToPayShipingCharges)
-        
-        return Listing.findAll({where: {isActive: true, $or: filters, isWillingToPayShipingCharges: isWillingToPayShipingCharges}, include: ['listingImages']});
-
-    }
-    if (isWillingToMeet !== null && isWillingToMeet !== undefined) {
-        console.log('RUN isWillingToMeet>>>>>>>>>>>>>>>>>>>>', isWillingToPayShipingCharges)
-
-        return Listing.findAll({where: {isActive: true, $or: filters, isWillingToMeet: isWillingToMeet}, include: ['listingImages']});
-    }
-    console.log('Only Fillters Can Run');
-    return Listing.findAll({where: {isActive: true, $or: filters}, include: ['listingImages']});
+    
 }
 
 exports.getAllListingForClientsBeforeLogin = () => {
