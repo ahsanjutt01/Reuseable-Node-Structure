@@ -8,7 +8,7 @@ const UserRole = require('../models/user-role');
 const UserType = require('../models/userType');
 const Catagory = require('../models/catagory');
 const ListingHelper = require('../_helpers/listingHelper');
-
+const Listing = require('../models/listing')
 const helper = require('../_helpers/helper');
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
@@ -201,7 +201,7 @@ exports.getFilteredAdminUsers = (req, res, next) => {
     const email = req.query.email;
     const filterType = req.query.filterType;
     const result = ListingHelper.checkFilterType(email,filterType)
-    if(email == "") {
+    if((email == "" || email == null)) {
         User.findAll({where: {isActive: true, userTypeId: 2}}).then(response => {
             res.status(200).json({users: response, message: 'Admin users fetched successfully', hasErrors: false})
         }).catch(error => {
@@ -228,13 +228,13 @@ exports.getFilteredUsers = (req, res, next) => {
     const fromDate = req.query.fDate;
     const toDate = req.query.tDate;
     
-    if(firstName == "" && lastName == "" && email == "" && fromDate == "" && toDate == "") {
+    if((firstName == "" || firstName == null) && (lastName == "" || lastName == null) && (email == "" || email == null) && (fromDate == "" || fromDate == null) && (toDate == "" || toDate == null)) {
         User.findAll({where: {isActive: true, userTypeId: 1}}).then(response => {
             res.status(200).json({users: response, message: "users fetched successfully", hasErrors: false});
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName == "" && email == "" && fromDate == "" && toDate != "") {
+    } else if((firstName == "" || firstName == null) && (lastName == "" || lastName == null) && (email == "" || email == null) && (fromDate == "" || fromDate == null) && (toDate != "" || toDate != null)) {
         User.findAll({where: {isActive: true, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.lte]: toDate
         }))}}).then(response => {
@@ -242,7 +242,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName == "" && email == "" && fromDate != "" && toDate == "") {
+    } else if((firstName == "" || firstName == null) && (lastName == "" || lastName == null) && (email == "" || email == null) && (fromDate != "" || fromDate != null) && (toDate == "" || toDate == null)) {
         User.findAll({where:  {isActive: true, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.gte]: fromDate
         }))}}).then(response => {
@@ -250,7 +250,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName == "" && email == "" && fromDate != "" && toDate != "") {
+    } else if((firstName == "" || firstName == null) && (lastName == "" || lastName == null) && (email == "" || email == null) && (fromDate != "" || fromDate != null) && (toDate != "" || toDate != null)) {
         User.findAll({where: {isActive: true, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.between]: [fromDate,toDate]
         }))}, [Op.and]: [sequelize.fn('date', sequelize.col('createdAt')), {
@@ -260,14 +260,14 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName == "" && email != "" && fromDate == "" && toDate == "") {
+    } else if((firstName == "" || firstName == null) && (lastName == "" || lastName == null) && (email != "" || email != null) && (fromDate == "" || fromDate == null) && (toDate == "" || toDate == null)) {
         const result = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, email: {[Op.like]: result}, userTypeId: 1}}).then(response => {
             res.status(200).json({users: response, message: "users fetched successfully", hasErrors: false});
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName == "" && email != "" && fromDate == "" && toDate != "") {
+    } else if((firstName == "" || firstName == null) && (lastName == "" || lastName == null) && (email != "" || email != null) && (fromDate == "" || fromDate == null) && (toDate != "" || toDate != null)) {
         const result = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, email: {[Op.like]: result}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.lte]: toDate
@@ -276,7 +276,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName == "" && email != "" && fromDate != "" && toDate == "") {
+    } else if((firstName == "" || firstName == null) && (lastName == "" || lastName == null) && (email != "" || email != null) && (fromDate != "" || fromDate != null) && (toDate == "" || toDate == null)) {
         const result = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, email: {[Op.like]: result}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.gte]: fromDate
@@ -285,7 +285,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName == "" && email != "" && fromDate != "" && toDate != "") {
+    } else if((firstName == "" || firstName == null) && (lastName == "" || lastName == null) && (email != "" || email != null) && (fromDate != "" || fromDate != null) && (toDate != "" || toDate != null)) {
         const result = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, email: {[Op.like]: result}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.between]: [fromDate, toDate]
@@ -294,14 +294,14 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName != "" && email == "" && fromDate == "" && toDate == "") {
+    } else if((firstName == "" || firstName == null) && (lastName != "" || lastName != null) && (email == "" || email == null) && (fromDate == "" || fromDate == null) && (toDate == "" || toDate == null)) {
         const result = ListingHelper.checkFilterType(lastName, lastNFilter);
         User.findAll({where: {isActive: true, lastName: {[Op.like]: result}, userTypeId: 1}}).then(response => {
             res.status(200).json({users: response, message: "users fetched successfully", hasErrors: false});
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName != "" && email == "" && fromDate == "" && toDate != "") {
+    } else if((firstName == "" || firstName == null) && (lastName != "" || lastName != null) && (email == "" || email == null) && (fromDate == "" || fromDate == null) && (toDate != "" || toDate != null)) {
         const result = ListingHelper.checkFilterType(lastName, lastNFilter);
         User.findAll({where: {isActive: true, lastName: {[Op.like]: result}, userTypeId: 1 , createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.lte]: toDate
@@ -310,7 +310,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName != "" && email == "" && fromDate != "" && toDate == "") {
+    } else if((firstName == "" || firstName == null) && (lastName != "" || lastName != null) && (email == "" || email == null) && (fromDate != "" || fromDate != null) && (toDate == "" || toDate == null)) {
         const result = ListingHelper.checkFilterType(lastName, lastNFilter);
         User.findAll({where: {isActive: true, lastName: {[Op.like]: result}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.gte]: fromDate
@@ -319,7 +319,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName != "" && email == "" && fromDate != "" && toDate != "") {
+    } else if((firstName == "" || firstName == null) && (lastName != "" || lastName != null) && (email == "" || email == null) && (fromDate != "" || fromDate != null) && (toDate != "" || toDate != null)) {
         const result = ListingHelper.checkFilterType(lastName, lastNFilter);
         User.findAll({where: {isActive: true, lastName: {[Op.like]: result}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.between]: [fromDate, toDate]
@@ -328,7 +328,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName != "" && email != "" && fromDate == "" && toDate == "") {
+    } else if((firstName == "" || firstName == null) && (lastName != "" || lastName != null) && (email != "" || email != null) && (fromDate == "" || fromDate == null) && (toDate == "" || toDate == null)) {
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, lastName: {[Op.like]: lastNameResult}, email: {[Op.like]: emailResult}, userTypeId: 1}}).then(response => {
@@ -336,7 +336,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName != "" && email != "" && fromDate == "" && toDate != "") {
+    } else if((firstName == "" || firstName == null) && (lastName != "" || lastName != null) && (email != "" || email != null) && (fromDate == "" || fromDate == null) && (toDate != "" || toDate != null)) {
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, lastName: {[Op.like]: lastNameResult}, email: {[Op.like]: emailResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
@@ -346,7 +346,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName != "" && email != "" && fromDate != "" && toDate == "") {
+    } else if((firstName == "" || firstName == null) && (lastName != "" || lastName != null) && (email != "" || email != null) && (fromDate != "" || fromDate != null) && (toDate == "" || toDate == null)) {
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, lastName: {[Op.like]: lastNameResult}, email: {[Op.like]: emailResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
@@ -356,7 +356,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName == "" && lastName != "" && email != "" && fromDate != "" && toDate != "") {
+    } else if((firstName == "" || firstName == null) && (lastName != "" || lastName != null) && (email != "" || email != null) && (fromDate != "" || fromDate != null) && (toDate != "" || toDate != null)) {
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, lastName: {[Op.like]: lastNameResult}, email: {[Op.like]: emailResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
@@ -366,14 +366,14 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName == "" && email == "" && fromDate == "" && toDate == "") {
+    } else if((firstName != "" || firstName != null) && (lastName == "" || lastName == null) && (email == "" || email == null) && (fromDate == "" || fromDate == null) && (toDate == "" || toDate == null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, userTypeId: 1}}).then(response => {
             res.status(200).json({users: response, message: "users fetched successfully", hasErrors: false});
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName == "" && email == "" && fromDate == "" && toDate != "") {
+    } else if((firstName != "" || firstName != null) && (lastName == "" || lastName == null) && (email == "" || email == null) && (fromDate == "" || fromDate == null) && (toDate != "" || toDate != null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.lte]: toDate
@@ -382,7 +382,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName == "" && email == "" && fromDate != "" && toDate == "") {
+    } else if((firstName != "" || firstName != null) && (lastName == "" || lastName == null) && (email == "" || email == null) && (fromDate != "" || fromDate != null) && (toDate == "" || toDate == null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.gte]: fromDate
@@ -391,7 +391,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName == "" && email == "" && fromDate != "" && toDate != "") {
+    } else if((firstName != "" || firstName != null) && (lastName == "" || lastName == null) && (email == "" || email == null) && (fromDate != "" || fromDate != null) && (toDate != "" || toDate != null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
             [Op.between]: [fromDate,toDate]
@@ -400,7 +400,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName == "" && email != "" && fromDate == "" && toDate == "") {
+    } else if((firstName != "" || firstName != null) && (lastName == "" || lastName == null) && (email != "" || email != null) && (fromDate == "" || fromDate == null) && (toDate == "" || toDate == null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, email: {[Op.like]: emailResult}, userTypeId: 1}}).then(response => {
@@ -408,7 +408,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName == "" && email != "" && fromDate == "" && toDate != "") {
+    } else if((firstName != "" || firstName != null) && (lastName == "" || lastName == null) && (email != "" || email != null) && (fromDate == "" || fromDate == null) && (toDate != "" || toDate != null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, email: {[Op.like]: emailResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
@@ -418,7 +418,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName == "" && email != "" && fromDate != "" && toDate == "") {
+    } else if((firstName != "" || firstName != null) && (lastName == "" || lastName == null) && (email != "" || email != null) && (fromDate != "" || fromDate != null) && (toDate == "" || toDate == null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, email: {[Op.like]: emailResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
@@ -428,7 +428,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName == "" && email != "" && fromDate != "" && toDate != "") {
+    } else if((firstName != "" || firstName != null) && (lastName == "" || lastName == null) && (email != "" || email != null) && (fromDate != "" || fromDate != null) && (toDate != "" || toDate != null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, email: {[Op.like]: emailResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
@@ -438,7 +438,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName != "" && email == "" && fromDate == "" && toDate == "") {
+    } else if((firstName != "" || firstName != null) && (lastName != "" || lastName != null) && (email == "" || email == null) && (fromDate == "" || fromDate == null) && (toDate == "" || toDate == null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, lastName: {[Op.like]: lastNameResult}, userTypeId: 1}}).then(response => {
@@ -446,7 +446,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName != "" && email == "" && fromDate == "" && toDate != "") {
+    } else if((firstName != "" || firstName != null) && (lastName != "" || lastName != null) && (email == "" || email == null) && (fromDate == "" || fromDate == null) && (toDate != "" || toDate != null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, lastName: {[Op.like]: lastNameResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
@@ -456,7 +456,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName != "" && email == "" && fromDate != "" && toDate == "") {
+    } else if((firstName != "" || firstName != null) && (lastName != "" || lastName != null) && (email == "" || email == null) && (fromDate != "" || fromDate != null) && (toDate == "" || toDate == null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, lastName: {[Op.like]: lastNameResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
@@ -466,7 +466,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName != "" && email == "" && fromDate != "" && toDate != "") {
+    } else if((firstName != "" || firstName != null) && (lastName != "" || lastName != null) && (email == "" || email == null) && (fromDate != "" || fromDate != null) && (toDate != "" || toDate != null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         User.findAll({where: {isActive: true, firstName: {[Op.like]: firstNameResult}, lastName: {[Op.like]: lastNameResult}, userTypeId: 1, createdAt: (sequelize.where(sequelize.fn('date', sequelize.col('createdAt')), {
@@ -476,7 +476,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName != "" && email != "" && fromDate == "" && toDate == "") {
+    } else if((firstName != "" || firstName != null) && (lastName != "" || lastName != null) && (email != "" || email != null) && (fromDate == "" || fromDate == null) && (toDate == "" || toDate == null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
@@ -485,7 +485,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName != "" && email != "" && fromDate == "" && toDate != "") {
+    } else if((firstName != "" || firstName != null) && (lastName != "" || lastName != null) && (email != "" || email != null) && (fromDate == "" || fromDate == null) && (toDate != "" || toDate != null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
@@ -496,7 +496,7 @@ exports.getFilteredUsers = (req, res, next) => {
         }).catch(error => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
-    } else if(firstName != "" && lastName != "" && email != "" && fromDate != "" && toDate == "") {
+    } else if((firstName != "" || firstName != null) && (lastName != "" || lastName != null) && (email != "" || email != null) && (fromDate != "" || fromDate != null) && (toDate == "" || toDate == null)) {
         const firstNameResult = ListingHelper.checkFilterType(firstName, fnFilter);
         const lastNameResult = ListingHelper.checkFilterType(lastName, lastNFilter);
         const emailResult = ListingHelper.checkFilterType(email, emailFilter);
@@ -519,6 +519,32 @@ exports.getFilteredUsers = (req, res, next) => {
             res.status(500).json({message: "Fetching failed", error: error, hasErrors: true});
         })
     }
+}
+
+// Get users count
+exports.getUsersCount = (req, res, next) => {
+    User.count({where: {isActive: true}}).then(response => {
+        res.status(200).json({total: response, hasErrors: false});
+    }).catch(error => {
+        res.status(500).json({total: response ,error: error, hasErrors: true});
+    })
+}
+
+//Get lists count
+exports.getListsCount = (req, res, next) => {
+    Listing.count({where: {isActive: true}}).then(response => {
+        res.status(200).json({total: response, hasErrors: false});
+    }).catch(error => {
+        res.status(500).json({total: response ,error: error, hasErrors: true});
+    })
+}
+//Get user active lists count
+exports.getUserActiveListsCount = (req, res, next) => {
+    User.count({distinct: 'id', where: {isActive: true}, include:({model: Listing, where: {isActive: true}})}).then(response => {
+        res.status(200).json({total: response, hasErrors: false});
+    }).catch(error => {
+        res.status(500).json({total: response ,error: error, hasErrors: true});
+    })
 }
 //================================= END USER MIDDLEWARE ====================================
 

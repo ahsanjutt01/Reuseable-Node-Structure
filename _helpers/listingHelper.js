@@ -18,7 +18,8 @@ exports.createListing = (
     isActiveListing,
     condition,
     imageUrls,
-    catagoryId
+    catagoryId,
+    userId
 ) => {
     return user.createListing({
         title: title,
@@ -32,7 +33,8 @@ exports.createListing = (
         isActiveListing: isActiveListing,
         condition: condition,
         catagoryId: catagoryId,
-        isActive: true
+        isActive: true,
+        userId: userId
     }).then( listing => {
         if(imageUrls.length > 0) {
             imageUrls.forEach(element => {
@@ -45,7 +47,7 @@ exports.createListing = (
 exports.adminCreateListing = (
     user,
     title,
-    desciption,
+    description,
     isFree,
     price,
     date,
@@ -58,9 +60,9 @@ exports.adminCreateListing = (
     catagoryId,
     userId
 ) => {
-    return Listing.create({
+    return user.createListing({
         title: title,
-        desciption: desciption,
+        description: description,
         isFree: isFree,
         price: price,
         date: date,
@@ -129,48 +131,48 @@ const getAllListings = () => {
 
 exports.getFilterListing = (title, titleType, email, emailType, catID, state, user) => {
     console.log(title,titleType,email,emailType,catID, state);
-    if(title == "" && email == "" && catID == 0 && state.toLowerCase() == "any") {
+    if((title == "" || title == null) && (email == "" || email == null) && (catID == 0 || catID == null) && (state == "any" || state == null)) {
         return getAllListings();
-    } else if(title != "" && email == "" && catID == 0 && state.toLowerCase() == "any") {
+    } else if((title != "" || title != null) && (email == "" || email == null) && (catID == 0 || catID == null) && (state == "any" || state == null)) {
         var resultValue = this.checkFilterType(title,titleType.toLowerCase())
         return Listing.findAll({where: {title: {[Op.like]: resultValue}}, include: ['listingImages']});
-    } else if(title == "" && email != "" && catID == 0 && state.toLowerCase() == "any") {
+    } else if((title == "" || title == null) && (email != "" || email != null) && (catID == 0 || catID == null) && (state == "any" || state == null)) {
         var emailResult = this.checkFilterType(email, emailType);
         return Listing.findAll({include: [{model: User, where: {email: {[Op.like]: emailResult}}}]});
-    } else if(title != "" && email != "" && catID == 0 && state.toLowerCase() == "any") {
+    } else if((title !="" || title != null) && (email != "" || email != null) && (catID == 0 || catID == null) && (state == "any" || state == null)) {
         var titleResult = this.checkFilterType(title, titleType.toLowerCase());
         var emailResult = this.checkFilterType(email, emailType.toLowerCase());
         return Listing.findAll({where: {title: {[Op.like]: titleResult}}, include: [{model:User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
-    } else if(title !="" && email!="" && catID !=0 && state.toLowerCase() == "any") {
+    } else if((title !="" || title != null) && (email != "" || email != null) && (catID != 0 || catID !=null) && (state == "any" || state == null)) {
         var titleResult = this.checkFilterType(title, titleType);
         var emailResult = this.checkFilterType(email, emailType);
         return Listing.findAll({where: {title: {[Op.like]: titleResult}, catagoryId: catID}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']})
-    } else if(title !="" && email!="" && catID ==0 && state.toLowerCase() != "any") {
+    } else if((title !="" || title != null) && (email != "" || email != null) && (catID == 0 || catID == null) && (state != "any" || state != null)) {
         var titleResult = this.checkFilterType(title, titleType);
         var emailResult = this.checkFilterType(email, emailType);
         return Listing.findAll({where: {title: {[Op.like]: titleResult}, state: state}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
-    } else if(title =="" && email=="" && catID ==0 && state.toLowerCase() != "any") {
+    } else if((title == "" || title == null) && (email == "" || email == null) && (catID == 0 || catID == null) && (state != "any" || state != null)) {
         return Listing.findAll({where: {state: state}, include: ['listingImages']});
-    } else if(title =="" && email=="" && catID !=0 && state.toLowerCase() == "any") {
+    } else if((title == "" || title == null) && (email == "" || email == null) && (catID != 0 || catID !=null) && (state == "any" || state == null)) {
         return Listing.findAll({where: {state: state}, include: ['listingImages']});
-    } else if(title =="" && email=="" && catID !=0 && state.toLowerCase() != "any") {
+    } else if((title == "" || title == null) && (email == "" || email == null) && (catID != 0 || catID !=null) && (state != "any" || state != null)) {
         return Listing.findAll({where: {state: state, catagoryId: catID}, include: ['listingImages']});
-    } else if(title =="" && email!="" && catID ==0 && state.toLowerCase() != "any") {
+    } else if((title == "" || title == null) && (email != "" || email != null) && (catID == 0 || catID == null) && (state != "any" || state != null)) {
         var emailResult = this.checkFilterType(email, emailType);
         return Listing.findAll({where: {state: state}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
-    } else if(title =="" && email!="" && catID !=0 && state.toLowerCase() == "any") {
+    } else if((title == "" || title == null) && (email != "" || email != null) && (catID != 0 || catID !=null) && (state == "any" || state == null)) {
         var emailResult = this.checkFilterType(email, emailType);
         return Listing.findAll({where: {catagoryId: catID}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
-    } else if(title =="" && email!="" && catID !=0 && state.toLowerCase() != "any") {
+    } else if((title == "" || title == null) && (email != "" || email != null) && (catID != 0 || catID !=null) && (state != "any" || state != null)) {
         var emailResult = this.checkFilterType(email, emailType);
         return Listing.findAll({where: {state: state , catagoryId: catID}, include: [{model: User, where: {email: {[Op.like]: emailResult}}}], include: ['listingImages']});
-    } else if(title !="" && email=="" && catID ==0 && state.toLowerCase() != "any") {
+    } else if((title !="" || title != null) && (email == "" || email == null) && (catID == 0 || catID ==null) && (state != "any" || state != null)) {
         var titleResult = this.checkFilterType(title, titleType);
         return Listing.findAll({where: {title: {[Op.like]: titleResult} ,state: state}});
-    } else if(title !="" && email=="" && catID !=0 && state.toLowerCase() == "any") {
+    } else if((title !="" || title != null) && (email == "" || email == null) && (catID != 0 || catID !=null) && (state == "any" || state == null)) {
         var titleResult = this.checkFilterType(title, titleType);
         return Listing.findAll({where: {title: {[Op.like]: titleResult} ,catagoryId: catID}});
-    }  else if(title !="" && email=="" && catID !=0 && state.toLowerCase() != "any") {
+    }  else if((title !="" || title != null) && (email == "" || email == null) && (catID != 0 || catID !=null) && (state != "any" || state != null)) {
         var titleResult = this.checkFilterType(title, titleType);
         return Listing.findAll({where: {title: {[Op.like]: titleResult}, state: state ,catagoryId: catID}});
     } else {
