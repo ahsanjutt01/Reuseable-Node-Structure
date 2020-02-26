@@ -63,7 +63,7 @@ exports.postSignup = (req, res, next) => {
                     isAgreeTerms: isAgreeTerms,
                     userTypeId: userTypeId,
                     isActive: true,
-                    zipcode: zipCode
+                    zipCode: zipCode
                 });
                 return userObj.save();
             });
