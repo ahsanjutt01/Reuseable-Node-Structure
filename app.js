@@ -16,6 +16,7 @@ const Listing = require('./models/listing');
 const ListingImage = require('./models/listingImages');
 const Catagory = require('./models/catagory');
 const Subscribe = require('./models/subscribe')
+const Conversation = require('./models/conversation');
 //Routes
 const adminRoutes = require('./routes/auth/admin');
 const authData = require('./routes/auth/auth');
@@ -140,6 +141,12 @@ Listing.belongsTo(User);
 Catagory.hasMany(Listing);
 Listing.belongsTo(Catagory);
 
+// Conversation
+// listing.hasMany(Conversation);
+// Conversation.belongsTo(listing);
+
+// Conversation.
+
 
 sequelize
 // .sync({ force: true })
@@ -150,8 +157,9 @@ sequelize
     const server = app.listen(process.env.PORT || 3200);
 
     const io = require('./socket').init(server);
-    io.on('connection', socket => {
-      console.log('clientConnected');
+    io.on('connected', socket => {
+      console.log('User Connected');
+      socket.on('disconnected', () => console.log('User Disconnected'));
     });
 })
 .catch( err => console.log(err));
