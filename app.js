@@ -142,10 +142,10 @@ Catagory.hasMany(Listing);
 Listing.belongsTo(Catagory);
 
 // Conversation
-// listing.hasMany(Conversation);
+Listing.hasOne(Conversation);
 // Conversation.belongsTo(listing);
 
-// Conversation.
+User.hasOne(Conversation);
 
 
 sequelize

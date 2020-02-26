@@ -194,7 +194,7 @@ exports.checkFilterType = (value,filterType) => {
         case "starts with": {
             return value + '%';
         }
-        case "ends with": {
+        case "endswith": {
             return '%'+value;
         }
         default: {
@@ -239,7 +239,7 @@ exports.getListingByCatgoriesBeforeLogin = (filter, isWillingToPayShipingCharges
     if (filter.zipcodes !== null && filter.zipcodes !== undefined && filter.zipcodes.length > 0) {
         filter.zipcodes.forEach(element => {
             if(element !== null && element !== undefined) {
-                zipcodeFilter.push({ zipcode: {$eq: element.zipcode}});
+                zipcodeFilter.push({ zipCode: {$eq: element.zipcode}});
             }
         });
     }
