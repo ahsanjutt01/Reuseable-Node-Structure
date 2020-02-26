@@ -595,9 +595,9 @@ exports.getFilterCategories = (req,res,next) => {
     const catName = req.query.catName;
     const catFilterType = req.query.filterType;
     const result = ListingHelper.checkFilterType(catName,catFilterType)
-        if(catName == "") {
+        if(catName == "" || catName == null) {
             Catagory.findAll({where: {isActive: true}}).then(response => {
-                res.status(200).json({catagory: response, message: 'Categories fetched successfully', hasErrors: false})
+                res.status(200).json({catagory: response, message: 'Categories fetchedd successfully', hasErrors: false})
             }).catch(error => {
                 res.status(500).json({message: 'Fetching failed', hasErrors: true});
             })
