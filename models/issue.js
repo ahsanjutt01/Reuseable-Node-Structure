@@ -3,18 +3,19 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../utils/database');
 
-const Conversation =  sequelize.define('conversations', {
+const Issue =  sequelize.define('issues', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    message: {
+    title: {
         type: Sequelize.STRING,
         allowNull: false
     },
+    description: Sequelize.STRING,
     isActive: Sequelize.BOOLEAN
 });
 
-module.exports = Conversation;
+module.exports = Issue;

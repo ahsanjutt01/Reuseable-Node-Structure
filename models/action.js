@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../utils/database');
 
-const Catagory =  sequelize.define('catagories', {
+const Action =  sequelize.define('actions', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -14,7 +14,8 @@ const Catagory =  sequelize.define('catagories', {
         type: Sequelize.STRING,
         allowNull: false
     },
+    description: Sequelize.STRING,
     isActive: Sequelize.BOOLEAN
 });
 
-module.exports = Catagory;
+module.exports = Action;

@@ -3,19 +3,19 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../utils/database');
 
-const ListingImage =  sequelize.define('listingImages', {
+const Position =  sequelize.define('position', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    url: {
+    title: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    isMarkAsDefault: Sequelize.BOOLEAN,
+    description: Sequelize.STRING,
     isActive: Sequelize.BOOLEAN
 });
 
-module.exports = ListingImage;
+module.exports = Position;

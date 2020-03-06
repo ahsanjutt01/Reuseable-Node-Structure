@@ -26,6 +26,10 @@ const User =  sequelize.define('users', {
         type: Sequelize.STRING(1000),
         allowNull: false
     },
+    gender: Sequelize.BOOLEAN,
+    race: Sequelize.STRING,
+    country: Sequelize.STRING,
+    city: Sequelize.STRING,
     zipCode: Sequelize.STRING,
     isAgreeTerms: Sequelize.BOOLEAN,
     isActive: Sequelize.BOOLEAN

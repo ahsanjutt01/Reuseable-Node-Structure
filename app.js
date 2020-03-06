@@ -12,15 +12,15 @@ const User = require('./models/user');
 const Role = require('./models/role');
 const UserRole = require('./models/user-role');
 const UserType = require('./models/userType');
-const Listing = require('./models/listing');
-const ListingImage = require('./models/listingImages');
-const Catagory = require('./models/catagory');
+// const Listing = require('./models/listing');
+// const ListingImage = require('./models/listingImages');
+// const Catagory = require('./models/catagory');
 const Subscribe = require('./models/subscribe')
-const Conversation = require('./models/conversation');
+// const Conversation = require('./models/conversation');
 //Routes
 const adminRoutes = require('./routes/auth/admin');
 const authData = require('./routes/auth/auth');
-const listingRoutes = require('./routes/listing');
+// const listingRoutes = require('./routes/listing');
 const subscribeRoutes = require('./routes/subscribe');
 
 
@@ -76,8 +76,8 @@ let strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
 
   app.use(passport.initialize());
 
-app.set('view engine', 'ejs');
-app.set('views', 'views');
+// app.set('view engine', 'ejs');
+// app.set('views', 'views');
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -115,9 +115,9 @@ app.use((req, res, next) => {
 
 //  ====================== Routes ======================
 app.use(authData);
-app.use('/admin', adminRoutes);
-app.use('/client', listingRoutes);
-app.use('/subscribe', subscribeRoutes);
+// app.use('/admin', adminRoutes);
+// app.use('/client', listingRoutes);
+// app.use('/subscribe', subscribeRoutes);
 
 //If Page not found
 app.use((req, res, next) => {
@@ -128,25 +128,25 @@ app.use((req, res, next) => {
 // Relationships
 // Role.belongsTo(User);
 // User.hasMany(Role);
-User.belongsToMany(Role, { through: UserRole });
-Role.belongsToMany(User, { through: UserRole });
+// User.belongsToMany(Role, { through: UserRole });
+// Role.belongsToMany(User, { through: UserRole });
 // Role.belongsTo(User);
 // User.hasMany(Role);
 UserType.hasMany(User);
 User.belongsTo(UserType);
 
-Listing.hasMany(ListingImage);
-ListingImage.belongsTo(Listing);
-User.hasMany(Listing);
-Listing.belongsTo(User);
-Catagory.hasMany(Listing);
-Listing.belongsTo(Catagory);
+// Listing.hasMany(ListingImage);
+// ListingImage.belongsTo(Listing);
+// User.hasMany(Listing);
+// Listing.belongsTo(User);
+// Catagory.hasMany(Listing);
+// Listing.belongsTo(Catagory);
 
-// Conversation
-Listing.hasOne(Conversation);
-// Conversation.belongsTo(listing);
+// // Conversation
+// Listing.hasOne(Conversation);
+// // Conversation.belongsTo(listing);
 
-User.hasOne(Conversation);
+// User.hasOne(Conversation);
 
 
 sequelize
@@ -161,6 +161,12 @@ sequelize
     io.on('connected', socket => {
       console.log('User Connected');
       socket.on('disconnected', () => console.log('User Disconnected'));
+    });
+    UserType.findAll().then(userTypes => {
+      if(userTypes.length == 0) {
+        UserType.create({title: 'politician'});
+        UserType.create({title: 'people'});
+      }
     });
 })
 .catch( err => console.log(err));

@@ -5,7 +5,6 @@ const { check, body } = require('express-validator/check');
 const helper = require('../../_helpers/helper');
 
 const adminController = require('../../controllers/admin');
-const listinghelper = require('../../_helpers/listingHelper');
 
 const router = express.Router();
 
@@ -38,43 +37,9 @@ router.get('/getClientUsers', passport.authenticate('jwt', {session: false}), he
 
 router.post('/resetPassword', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.postResetPassword);
 
-router.get('/getAllCatagories', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getAllCatagories);
-
-router.post('/createCatagory', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.postCatagory);
-
-router.post('/deleteCatagory', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.postDeleteCatagory);
-
-router.post('/updateCatagory', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.postUpdateCatagory);
-
-router.post('/createListing', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.postListing);
-
-router.get('/getListings', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getAllListing);
-
-router.get('/getOneListing', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getOneListing);
-
-router.post('/updateListing', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.postupdateListing);
-
 router.post('/deleteAdminUser', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.postDeleteAdminUser);
 
-router.get('/getFilteredListing', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getFilterListing);
-
-router.get('/getFilterCategories', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getFilterCategories);
-
-router.get('/getFilteredAdminUsers', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getFilteredAdminUsers);
-
-router.get('/getFilteredUsers', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getFilteredUsers);
-
-router.post('/markListingImageDefault', passport.authenticate('jwt', {session: false}), helper.isAdmin, listinghelper.postMarkListingImageDefault);
-
-router.post('/deleteListingImage', passport.authenticate('jwt', {session: false}), helper.isAdmin, listinghelper.postDeleteLisitngImage);
-
-router.post('/postListingImage', passport.authenticate('jwt', {session: false}),  helper.isAdmin,listinghelper.postUploadlistingImage);
-
 router.get('/getUsersCount', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getUsersCount);
-
-router.get('/getListsCount', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getListsCount);
-
-router.get('/getUserActiveListsCount', passport.authenticate('jwt', {session: false}), helper.isAdmin, adminController.getUserActiveListsCount);
 
 module.exports = router;
 

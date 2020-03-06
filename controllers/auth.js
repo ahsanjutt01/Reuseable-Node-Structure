@@ -6,7 +6,6 @@ const User = require('../models/user');
 const Role = require('../models/role');
 const UserRole = require('../models/user-role');
 const UserType = require('../models/userType');
-const Catagory = require('../models/catagory');
 
 "use strict"
 
@@ -204,10 +203,6 @@ const findClientUserType = async () => {
 
 const getAllZipcode = async () => {
     return await User.findAll({attributes: [Sequelize.fn('DISTINCT', Sequelize.col('zipcode')) ,'zipcode'], where: { isActive: true, zipcode: {$ne:null}}});
-}
-//get All Catagory
-const getAllCatagories = async () => {
-    return await Catagory.findAll({where: {isActive: true}});
 }
 
 exports.getClientProfile = (req, res, next) => {
