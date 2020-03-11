@@ -1,4 +1,4 @@
-# REUSEABLE_NODE_STRUCTURE
+# PRIVATE_IMAGES_SERVER
 
-  This node structure is reuseable for new scratch projects.
+  User can signup and login and save there pictures into server...
 
